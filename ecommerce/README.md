@@ -217,7 +217,6 @@ All protected endpoints require a `Bearer <token>` header. Use `POST /api/auth/l
 |---|---|---|---|
 | `/api/auth/register` | POST | Public | Register a new user |
 | `/api/auth/login` | POST | Public | Obtain JWT token |
-| `/api/auth/me` | GET | Authenticated | Current user info |
 
 ---
 
