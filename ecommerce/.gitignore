@@ -36,7 +36,6 @@ build/
 .env
 .env.*
 !.env.example
-application-local.properties
 
 ### OS ###
 .DS_Store
