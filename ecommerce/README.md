@@ -79,70 +79,116 @@ src/main/java/com/trekking/ecommerce/
 
 ## Setup & Running
 
-### Prerequisites
+### Requisitos
 
 - Java 17+
-- Maven (or use the included `./mvnw` wrapper)
-- Docker (optional, for MySQL)
+- Maven (o usar el wrapper incluido `./mvnw` / `mvnw.cmd`)
+- MySQL 8+ **o** Docker (según la opción elegida)
 
 ---
 
-### Option 1 — Local dev with H2 (no database required)
+### Opción 1 — H2 en memoria (sin base de datos)
+
+No requiere ninguna instalación externa. La base de datos es volátil: se borra al detener la app. No carga datos semilla.
 
 ```bash
+# Linux / macOS
 ./mvnw spring-boot:run
+
+# Windows
+mvnw.cmd spring-boot:run
 ```
 
-The app starts on `http://localhost:8080` with an H2 in-memory database.  
-H2 console available at: `http://localhost:8080/h2-console`
+La app arranca en `http://localhost:8080`.  
+Consola H2: `http://localhost:8080/h2-console`
 
 ---
 
-### Option 2 — MySQL via Docker Compose
+### Opción 2 — MySQL local instalado (perfil `dev`)
+
+Requiere MySQL 8 corriendo en `localhost:3306` con usuario `root` sin contraseña (o ajustar `application-dev.properties`).  
+El seed se carga automáticamente al iniciar.
 
 ```bash
-# Start MySQL container
+# Linux / macOS
+SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+
+# Windows (PowerShell)
+$env:SPRING_PROFILES_ACTIVE="dev"; .\mvnw.cmd spring-boot:run
+
+# Windows (CMD)
+set SPRING_PROFILES_ACTIVE=dev && mvnw.cmd spring-boot:run
+```
+
+---
+
+### Opción 3 — MySQL via Docker Compose (perfil `mysql`)
+
+El seed se carga automáticamente al iniciar. Primera vez que se ejecuta, Docker también inicializa la base de datos con el script `db/trekking_ecommerce.sql`.
+
+```bash
+# 1. Levantar el contenedor MySQL
 docker compose up -d
 
-# Run the app pointing at MySQL
+# 2. Iniciar la app (Linux / macOS)
 SPRING_PROFILES_ACTIVE=mysql ./mvnw spring-boot:run
+
+# 2. Iniciar la app (Windows PowerShell)
+$env:SPRING_PROFILES_ACTIVE="mysql"; .\mvnw.cmd spring-boot:run
+
+# 2. Iniciar la app (Windows CMD)
+set SPRING_PROFILES_ACTIVE=mysql && mvnw.cmd spring-boot:run
 ```
 
-Default Docker MySQL credentials: `root / 12345`, database `trekking_ecommerce`.
+Credenciales Docker por defecto: `root / 12345`, base de datos `trekking_ecommerce`.
+
+> **Nota:** si la base ya existe (el volumen `mysql_data` no es nuevo), Docker no vuelve a correr el script de init, pero Spring Boot carga el seed igual vía `data.sql` al arrancar.
 
 ---
 
-### Option 3 — External MySQL (custom credentials)
+### Opción 4 — MySQL externo con credenciales custom
 
 ```bash
+# Linux / macOS
 SPRING_PROFILES_ACTIVE=mysql \
   DB_HOST=localhost \
   DB_PORT=3306 \
   DB_NAME=trekking_ecommerce \
-  DB_USERNAME=your_user \
-  DB_PASSWORD=your_password \
+  DB_USERNAME=tu_usuario \
+  DB_PASSWORD=tu_password \
   ./mvnw spring-boot:run
 ```
 
 ---
 
-### Environment Profiles
+### Perfiles disponibles
 
-| Profile | Database | Use case |
+| Perfil | Base de datos | Seed automático | Uso recomendado |
+|---|---|---|---|
+| `local` (default) | H2 en memoria | No | Desarrollo rápido sin configuración |
+| `dev` | MySQL local | Sí | Desarrollo con base de datos real |
+| `mysql` | MySQL vía env vars | Sí | Docker / entorno compartido |
+
+---
+
+### Usuarios semilla (perfiles `dev` y `mysql`)
+
+| Usuario | Contraseña | Rol |
 |---|---|---|
-| `local` (default) | H2 in-memory | Local development, no setup needed |
-| `dev` | MySQL local | Development with real DB |
-| `mysql` | MySQL (env vars) | Production / Docker |
-| `test` | H2 in-memory | Automated tests |
+| `admin` | `admin123` | ADMIN |
+| `juanperez` | `user123` | CLIENTE |
+| `mariagomez` | `cliente123` | CLIENTE |
+
+Obtener token: `POST /api/auth/login` con `{ "username": "...", "password": "..." }`
 
 ---
 
 ### JWT Secret
 
-Override the default secret via environment variable (required in production):
+En producción, sobreescribir la clave por defecto con una variable de entorno:
 
 ```bash
-JWT_SECRET=your-very-long-secret-key-here ./mvnw spring-boot:run
+JWT_SECRET=tu-clave-secreta-larga ./mvnw spring-boot:run
 ```
 
 ---

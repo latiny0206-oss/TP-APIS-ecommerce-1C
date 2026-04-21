@@ -231,14 +231,14 @@ INSERT INTO marca (id_marca, nombre, descripcion) VALUES
 
 -- ---------- 5.3 Usuarios ----------
 -- Hashes BCrypt (strength=10) verificados contra Spring Security:
---   admin123    -> $2b$10$rYBTK8hGdafLCBzAoYN0X.ohFBPu5XzcQDL.C1Ib3ZwDk0b6wdE3i
---   user123     -> $2b$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW
---   cliente123  -> $2b$10$PBo6KmC7d.YhT25MuPM64uRr9z1NMde53sqQ5rl0f7GW3J5kXXcq2
+--   admin123    -> $2a$10$rYBTK8hGdafLCBzAoYN0X.ohFBPu5XzcQDL.C1Ib3ZwDk0b6wdE3i
+--   user123     -> $2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW
+--   cliente123  -> $2a$10$PBo6KmC7d.YhT25MuPM64uRr9z1NMde53sqQ5rl0f7GW3J5kXXcq2
 INSERT INTO usuario (id_usuario, username, email, password, nombre, apellido, rol, estado) VALUES
-    (1, 'admin',      'admin@trekking.com',      '$2b$10$rYBTK8hGdafLCBzAoYN0X.ohFBPu5XzcQDL.C1Ib3ZwDk0b6wdE3i', 'Admin',  'Sistema',  'ADMIN',   'ACTIVO'),
-    (2, 'juanperez',  'juan.perez@mail.com',     '$2b$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Juan',   'Perez',    'CLIENTE', 'ACTIVO'),
-    (3, 'mariagomez', 'maria.gomez@mail.com',    '$2b$10$PBo6KmC7d.YhT25MuPM64uRr9z1NMde53sqQ5rl0f7GW3J5kXXcq2', 'Maria',  'Gomez',    'CLIENTE', 'ACTIVO'),
-    (4, 'inactivo',   'inactivo@trekking.com',   '$2b$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Usuario','Inactivo', 'CLIENTE', 'INACTIVO');
+    (1, 'admin',      'admin@trekking.com',      '$2a$10$rYBTK8hGdafLCBzAoYN0X.ohFBPu5XzcQDL.C1Ib3ZwDk0b6wdE3i', 'Admin',  'Sistema',  'ADMIN',   'ACTIVO'),
+    (2, 'juanperez',  'juan.perez@mail.com',     '$2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Juan',   'Perez',    'CLIENTE', 'ACTIVO'),
+    (3, 'mariagomez', 'maria.gomez@mail.com',    '$2a$10$PBo6KmC7d.YhT25MuPM64uRr9z1NMde53sqQ5rl0f7GW3J5kXXcq2', 'Maria',  'Gomez',    'CLIENTE', 'ACTIVO'),
+    (4, 'inactivo',   'inactivo@trekking.com',   '$2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Usuario','Inactivo', 'CLIENTE', 'INACTIVO');
 
 -- ---------- 5.4 Descuentos ----------
 INSERT INTO descuento (id_descuento, nombre, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
