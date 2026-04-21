@@ -89,7 +89,11 @@ src/main/java/com/trekking/ecommerce/
 
 ### Opción 1 — H2 en memoria (sin base de datos)
 
-No requiere ninguna instalación externa. La base de datos es volátil: se borra al detener la app. No carga datos semilla.
+No requiere ninguna instalación externa. La base de datos es volátil: se borra al detener la app.
+
+Hay dos variantes según si necesitás o no los datos semilla:
+
+#### Sin seed (base de datos vacía)
 
 ```bash
 # Linux / macOS
@@ -98,6 +102,21 @@ No requiere ninguna instalación externa. La base de datos es volátil: se borra
 # Windows
 mvnw.cmd spring-boot:run
 ```
+
+#### Con seed — perfil `local` ⚠️ obligatorio para tener datos de prueba
+
+```bash
+# Linux / macOS
+SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+
+# Windows (PowerShell)
+$env:SPRING_PROFILES_ACTIVE="local"; .\mvnw.cmd spring-boot:run
+
+# Windows (CMD)
+set SPRING_PROFILES_ACTIVE=local && mvnw.cmd spring-boot:run
+```
+
+> **Importante:** correr `./mvnw spring-boot:run` sin especificar el perfil `local` levanta H2 **sin seed**. Si necesitás los usuarios y productos de prueba, el perfil `local` es obligatorio.
 
 La app arranca en `http://localhost:8080`.  
 Consola H2: `http://localhost:8080/h2-console`
@@ -165,9 +184,10 @@ SPRING_PROFILES_ACTIVE=mysql \
 
 | Perfil | Base de datos | Seed automático | Uso recomendado |
 |---|---|---|---|
-| `local` (default) | H2 en memoria | No | Desarrollo rápido sin configuración |
-| `dev` | MySQL local | Sí | Desarrollo con base de datos real |
-| `mysql` | MySQL vía env vars | Sí | Docker / entorno compartido |
+| (ninguno / default) | H2 en memoria | **No** | Levantar rápido sin datos |
+| `local` | H2 en memoria | **Sí** | Desarrollo local con datos de prueba |
+| `dev` | MySQL local | **Sí** | Desarrollo con base de datos real |
+| `mysql` | MySQL vía env vars | **Sí** | Docker / entorno compartido |
 
 ---
 
