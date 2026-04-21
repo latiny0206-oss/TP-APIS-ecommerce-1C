@@ -1,0 +1,497 @@
+{
+  "info": {
+    "name": "Trekking Ecommerce API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base", "value": "http://localhost:8080" },
+    { "key": "usuarioId", "value": "1" },
+    { "key": "categoriaId", "value": "1" },
+    { "key": "marcaId", "value": "1" },
+    { "key": "productoId", "value": "1" },
+    { "key": "varianteId", "value": "1" },
+    { "key": "fotoId", "value": "1" },
+    { "key": "descuentoId", "value": "1" },
+    { "key": "carritoId", "value": "1" },
+    { "key": "itemCarritoId", "value": "1" },
+    { "key": "ordenId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "01 - Usuarios",
+      "item": [
+        {
+          "name": "GET todos los usuarios",
+          "request": { "method": "GET", "url": "{{base}}/api/usuarios" }
+        },
+        {
+          "name": "GET usuario por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/usuarios/{{usuarioId}}" }
+        },
+        {
+          "name": "POST crear usuario",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/usuarios",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan123\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"password123\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rol\": \"CLIENTE\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/usuarios/{{usuarioId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan_updated\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"newpassword123\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rol\": \"CLIENTE\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar usuario",
+          "request": { "method": "DELETE", "url": "{{base}}/api/usuarios/{{usuarioId}}" }
+        }
+      ]
+    },
+    {
+      "name": "02 - Categorias",
+      "item": [
+        {
+          "name": "GET todas las categorias",
+          "request": { "method": "GET", "url": "{{base}}/api/categorias" }
+        },
+        {
+          "name": "GET categoria por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/categorias/{{categoriaId}}" }
+        },
+        {
+          "name": "POST crear categoria",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/categorias",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Calzado\",\n  \"descripcion\": \"Botas y zapatillas de trekking\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar categoria",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/categorias/{{categoriaId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Calzado de montaña\",\n  \"descripcion\": \"Botas y zapatillas para montaña\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar categoria",
+          "request": { "method": "DELETE", "url": "{{base}}/api/categorias/{{categoriaId}}" }
+        }
+      ]
+    },
+    {
+      "name": "03 - Marcas",
+      "item": [
+        {
+          "name": "GET todas las marcas",
+          "request": { "method": "GET", "url": "{{base}}/api/marcas" }
+        },
+        {
+          "name": "GET marca por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/marcas/{{marcaId}}" }
+        },
+        {
+          "name": "POST crear marca",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/marcas",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Salomon\",\n  \"descripcion\": \"Marca francesa de equipamiento outdoor\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar marca",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/marcas/{{marcaId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Salomon Pro\",\n  \"descripcion\": \"Línea profesional de Salomon\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar marca",
+          "request": { "method": "DELETE", "url": "{{base}}/api/marcas/{{marcaId}}" }
+        }
+      ]
+    },
+    {
+      "name": "04 - Productos",
+      "item": [
+        {
+          "name": "GET todos los productos",
+          "request": { "method": "GET", "url": "{{base}}/api/productos" }
+        },
+        {
+          "name": "GET producto por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/productos/{{productoId}}" }
+        },
+        {
+          "name": "GET productos por categoria",
+          "request": { "method": "GET", "url": "{{base}}/api/productos/categoria/{{categoriaId}}" }
+        },
+        {
+          "name": "GET productos por marca",
+          "request": { "method": "GET", "url": "{{base}}/api/productos/marca/{{marcaId}}" }
+        },
+        {
+          "name": "GET productos por estado",
+          "request": { "method": "GET", "url": "{{base}}/api/productos/estado/ACTIVO" }
+        },
+        {
+          "name": "GET producto disponible",
+          "request": { "method": "GET", "url": "{{base}}/api/productos/{{productoId}}/disponible" }
+        },
+        {
+          "name": "POST crear producto",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/productos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marcaId\": 1,\n  \"categoriaId\": 1,\n  \"nombre\": \"Bota X Ultra 4\",\n  \"descripcion\": \"Bota de trekking ligera y resistente\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 45000.00\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar producto",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/productos/{{productoId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marcaId\": 1,\n  \"categoriaId\": 1,\n  \"nombre\": \"Bota X Ultra 4 GTX\",\n  \"descripcion\": \"Bota de trekking con membrana Gore-Tex\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 52000.00\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar producto",
+          "request": { "method": "DELETE", "url": "{{base}}/api/productos/{{productoId}}" }
+        }
+      ]
+    },
+    {
+      "name": "05 - Variantes",
+      "item": [
+        {
+          "name": "GET todas las variantes",
+          "request": { "method": "GET", "url": "{{base}}/api/variantes" }
+        },
+        {
+          "name": "GET variante por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/variantes/{{varianteId}}" }
+        },
+        {
+          "name": "GET precio de variante",
+          "request": { "method": "GET", "url": "{{base}}/api/variantes/{{varianteId}}/precio" }
+        },
+        {
+          "name": "GET stock disponible",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/api/variantes/{{varianteId}}/stock/disponible?cantidad=2",
+              "host": ["{{base}}"],
+              "path": ["api", "variantes", "{{varianteId}}", "stock", "disponible"],
+              "query": [{ "key": "cantidad", "value": "2" }]
+            }
+          }
+        },
+        {
+          "name": "POST crear variante",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/variantes",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": 1,\n  \"color\": \"Negro\",\n  \"talla\": \"42\",\n  \"material\": \"Gore-Tex\",\n  \"peso\": 0.85,\n  \"stock\": 50,\n  \"precio\": 52000.00,\n  \"estacion\": \"INVIERNO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar variante",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/variantes/{{varianteId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": 1,\n  \"color\": \"Negro\",\n  \"talla\": \"42\",\n  \"material\": \"Gore-Tex\",\n  \"peso\": 0.85,\n  \"stock\": 40,\n  \"precio\": 54000.00,\n  \"estacion\": \"INVIERNO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar variante",
+          "request": { "method": "DELETE", "url": "{{base}}/api/variantes/{{varianteId}}" }
+        }
+      ]
+    },
+    {
+      "name": "06 - Fotos",
+      "item": [
+        {
+          "name": "GET todas las fotos",
+          "request": { "method": "GET", "url": "{{base}}/api/fotos" }
+        },
+        {
+          "name": "GET foto por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/fotos/{{fotoId}}" }
+        },
+        {
+          "name": "GET fotos por producto",
+          "request": { "method": "GET", "url": "{{base}}/api/fotos/producto/{{productoId}}" }
+        },
+        {
+          "name": "POST crear foto",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/fotos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": 1,\n  \"nombre\": \"bota-x-ultra-4-negro.jpg\",\n  \"orden\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar foto",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/fotos/{{fotoId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": 1,\n  \"nombre\": \"bota-x-ultra-4-negro-lateral.jpg\",\n  \"orden\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar foto",
+          "request": { "method": "DELETE", "url": "{{base}}/api/fotos/{{fotoId}}" }
+        }
+      ]
+    },
+    {
+      "name": "07 - Descuentos",
+      "item": [
+        {
+          "name": "GET todos los descuentos",
+          "request": { "method": "GET", "url": "{{base}}/api/descuentos" }
+        },
+        {
+          "name": "GET descuento por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/descuentos/{{descuentoId}}" }
+        },
+        {
+          "name": "GET descuento vigente",
+          "request": { "method": "GET", "url": "{{base}}/api/descuentos/{{descuentoId}}/vigente" }
+        },
+        {
+          "name": "GET calcular descuento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/api/descuentos/{{descuentoId}}/calcular?monto=10000",
+              "host": ["{{base}}"],
+              "path": ["api", "descuentos", "{{descuentoId}}", "calcular"],
+              "query": [{ "key": "monto", "value": "10000" }]
+            }
+          }
+        },
+        {
+          "name": "POST crear descuento (PORCENTAJE)",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/descuentos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"PORCENTAJE\",\n  \"valor\": 0,\n  \"porcentaje\": 15.0,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2026-12-31\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST crear descuento (FIJO)",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/descuentos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"FIJO\",\n  \"valor\": 5000.00,\n  \"porcentaje\": null,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2026-06-30\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar descuento",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/descuentos/{{descuentoId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"PORCENTAJE\",\n  \"valor\": 0,\n  \"porcentaje\": 20.0,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2026-12-31\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar descuento",
+          "request": { "method": "DELETE", "url": "{{base}}/api/descuentos/{{descuentoId}}" }
+        }
+      ]
+    },
+    {
+      "name": "08 - Carritos",
+      "item": [
+        {
+          "name": "GET todos los carritos",
+          "request": { "method": "GET", "url": "{{base}}/api/carritos" }
+        },
+        {
+          "name": "GET carrito por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/carritos/{{carritoId}}" }
+        },
+        {
+          "name": "GET items del carrito",
+          "request": { "method": "GET", "url": "{{base}}/api/carritos/{{carritoId}}/items" }
+        },
+        {
+          "name": "GET total del carrito",
+          "request": { "method": "GET", "url": "{{base}}/api/carritos/{{carritoId}}/total" }
+        },
+        {
+          "name": "POST crear carrito",
+          "request": {
+            "method": "POST",
+            "url": "{{base}}/api/carritos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"descuentoId\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "POST agregar item al carrito",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base}}/api/carritos/{{carritoId}}/items?idVariante=1&cantidad=2",
+              "host": ["{{base}}"],
+              "path": ["api", "carritos", "{{carritoId}}", "items"],
+              "query": [
+                { "key": "idVariante", "value": "1" },
+                { "key": "cantidad", "value": "2" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar cantidad de item",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base}}/api/carritos/{{carritoId}}/items/{{itemCarritoId}}?cantidad=3",
+              "host": ["{{base}}"],
+              "path": ["api", "carritos", "{{carritoId}}", "items", "{{itemCarritoId}}"],
+              "query": [{ "key": "cantidad", "value": "3" }]
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar item del carrito",
+          "request": { "method": "DELETE", "url": "{{base}}/api/carritos/{{carritoId}}/items/{{itemCarritoId}}" }
+        },
+        {
+          "name": "POST vaciar carrito",
+          "request": { "method": "POST", "url": "{{base}}/api/carritos/{{carritoId}}/vaciar" }
+        },
+        {
+          "name": "POST checkout (realizar compra)",
+          "request": { "method": "POST", "url": "{{base}}/api/carritos/{{carritoId}}/checkout" }
+        },
+        {
+          "name": "PUT actualizar carrito",
+          "request": {
+            "method": "PUT",
+            "url": "{{base}}/api/carritos/{{carritoId}}",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"descuentoId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE eliminar carrito",
+          "request": { "method": "DELETE", "url": "{{base}}/api/carritos/{{carritoId}}" }
+        }
+      ]
+    },
+    {
+      "name": "09 - Ordenes",
+      "item": [
+        {
+          "name": "GET todas las ordenes",
+          "request": { "method": "GET", "url": "{{base}}/api/ordenes" }
+        },
+        {
+          "name": "GET orden por ID",
+          "request": { "method": "GET", "url": "{{base}}/api/ordenes/{{ordenId}}" }
+        },
+        {
+          "name": "GET items de la orden",
+          "request": { "method": "GET", "url": "{{base}}/api/ordenes/{{ordenId}}/items" }
+        },
+        {
+          "name": "GET monto final de la orden",
+          "request": { "method": "GET", "url": "{{base}}/api/ordenes/{{ordenId}}/monto-final" }
+        },
+        {
+          "name": "GET historial de ordenes por usuario",
+          "request": { "method": "GET", "url": "{{base}}/api/ordenes/usuario/{{usuarioId}}" }
+        },
+        {
+          "name": "POST confirmar orden",
+          "request": { "method": "POST", "url": "{{base}}/api/ordenes/{{ordenId}}/confirmar" }
+        },
+        {
+          "name": "POST cancelar orden",
+          "request": { "method": "POST", "url": "{{base}}/api/ordenes/{{ordenId}}/cancelar" }
+        },
+        {
+          "name": "DELETE eliminar orden",
+          "request": { "method": "DELETE", "url": "{{base}}/api/ordenes/{{ordenId}}" }
+        }
+      ]
+    }
+  ]
+}

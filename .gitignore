@@ -1,0 +1,54 @@
+# ===== Build outputs =====
+target/
+build/
+dist/
+out/
+*.class
+*.jar
+*.war
+
+# ===== Maven wrapper binary =====
+.mvn/wrapper/maven-wrapper.jar
+
+# ===== IDE metadata =====
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+.nb-gradle/
+nbproject/private/
+nbbuild/
+nbdist/
+
+# ===== AI agent metadata =====
+.claude/
+.anthropic/
+AGENTS.md
+CLAUDE.md
+
+# ===== Local secrets & environment =====
+.env
+.env.*
+!.env.example
+application-local.properties
+application-secrets.properties
+*.secret.properties
+
+# ===== OS generated =====
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+._*
+
+# ===== Logs =====
+*.log
+logs/
