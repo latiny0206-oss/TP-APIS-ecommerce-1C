@@ -1,6 +1,7 @@
 package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.MarcaRequest;
+import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Marca;
 import com.trekking.ecommerce.repository.MarcaRepository;
@@ -32,6 +33,9 @@ public class MarcaServiceImpl implements MarcaService {
     @Override
     @Transactional
     public Marca create(MarcaRequest request) {
+        if (marcaRepository.existsByNombreIgnoreCase(request.getNombre())) {
+            throw new BusinessRuleException("Ya existe una marca con el nombre: " + request.getNombre());
+        }
         Marca marca = Marca.builder()
                 .nombre(request.getNombre())
                 .descripcion(request.getDescripcion())
@@ -42,6 +46,9 @@ public class MarcaServiceImpl implements MarcaService {
     @Override
     @Transactional
     public Marca update(Long id, MarcaRequest request) {
+        if (marcaRepository.existsByNombreIgnoreCaseAndIdNot(request.getNombre(), id)) {
+            throw new BusinessRuleException("Ya existe otra marca con el nombre: " + request.getNombre());
+        }
         Marca actual = findById(id);
         actual.setNombre(request.getNombre());
         actual.setDescripcion(request.getDescripcion());

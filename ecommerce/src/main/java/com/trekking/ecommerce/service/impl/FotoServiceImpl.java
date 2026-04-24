@@ -43,6 +43,7 @@ public class FotoServiceImpl implements FotoService {
     @Override
     @Transactional
     public Foto create(Long varianteId, Integer orden, MultipartFile archivo) {
+        validarArchivo(archivo);
         Foto foto = Foto.builder()
                 .variante(varianteProductoService.findById(varianteId))
                 .nombre(archivo.getOriginalFilename())
@@ -56,6 +57,7 @@ public class FotoServiceImpl implements FotoService {
     @Override
     @Transactional
     public Foto update(Long id, Long varianteId, Integer orden, MultipartFile archivo) {
+        validarArchivo(archivo);
         Foto actual = findById(id);
         actual.setVariante(varianteProductoService.findById(varianteId));
         actual.setOrden(orden);
@@ -77,6 +79,18 @@ public class FotoServiceImpl implements FotoService {
             return archivo.getBytes();
         } catch (IOException e) {
             throw new BusinessRuleException("No se pudo leer el archivo: " + e.getMessage());
+        }
+    }
+
+    private void validarArchivo(MultipartFile archivo) {
+        if (archivo == null || archivo.isEmpty()) {
+            throw new BusinessRuleException("Debe enviar un archivo en el campo 'archivo'.");
+        }
+        if (archivo.getOriginalFilename() == null || archivo.getOriginalFilename().isBlank()) {
+            throw new BusinessRuleException("El archivo debe tener nombre.");
+        }
+        if (archivo.getContentType() == null || archivo.getContentType().isBlank()) {
+            throw new BusinessRuleException("No se pudo detectar el tipo de contenido del archivo.");
         }
     }
 }

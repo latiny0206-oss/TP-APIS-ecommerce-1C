@@ -98,6 +98,8 @@ class FotoServiceImplTest {
 
     @Test
     void create_varianteInexistente_lanzaResourceNotFoundException() {
+        when(archivo.getOriginalFilename()).thenReturn("foto.jpg");
+        when(archivo.getContentType()).thenReturn("image/jpeg");
         when(varianteProductoService.findById(99L))
                 .thenThrow(new ResourceNotFoundException("VarianteProducto", 99L));
 
@@ -141,6 +143,8 @@ class FotoServiceImplTest {
     void update_varianteInexistente_lanzaResourceNotFoundException() {
         Foto actual = fotoBase();
 
+        when(archivo.getOriginalFilename()).thenReturn("nuevo.jpg");
+        when(archivo.getContentType()).thenReturn("image/png");
         when(fotoRepository.findById(1L)).thenReturn(Optional.of(actual));
         when(varianteProductoService.findById(99L))
                 .thenThrow(new ResourceNotFoundException("VarianteProducto", 99L));

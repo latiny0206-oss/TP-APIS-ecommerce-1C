@@ -7,6 +7,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 public interface DescuentoRepository extends JpaRepository<Descuento, Long> {
 
+    boolean existsByNombreIgnoreCase(String nombre);
+    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
+
     List<Descuento> findByEstado(EstadoDescuento estado);
 
     List<Descuento> findByEstadoAndFechaFinBefore(EstadoDescuento estado, LocalDate hoy);
