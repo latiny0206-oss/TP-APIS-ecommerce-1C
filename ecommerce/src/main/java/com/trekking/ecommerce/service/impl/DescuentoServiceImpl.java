@@ -94,6 +94,9 @@ public class DescuentoServiceImpl implements DescuentoService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal calcularDescuento(Long id, BigDecimal monto) {
+        if (monto == null || monto.compareTo(BigDecimal.ZERO) < 0) {
+            throw new BusinessRuleException("El monto para calcular descuento debe ser mayor o igual a 0");
+        }
         Descuento descuento = findById(id);
         if (!estaVigente(id)) {
             return BigDecimal.ZERO;

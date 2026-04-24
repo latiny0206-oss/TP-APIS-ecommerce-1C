@@ -153,6 +153,15 @@ class DescuentoServiceImplTest {
     }
 
     @Test
+    void calcularDescuento_conMontoNegativo_lanzaBusinessRuleException() {
+        Long id = 7L;
+
+        assertThatThrownBy(() -> descuentoService.calcularDescuento(id, new BigDecimal("-1.00")))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("mayor o igual a 0");
+    }
+
+    @Test
     void estaVigente_descuentoActivoEnRango_retornaTrue() {
         Long id = 5L;
         Descuento d = descuentoActivo(TipoDescuento.FIJO, new BigDecimal("10.00"));
