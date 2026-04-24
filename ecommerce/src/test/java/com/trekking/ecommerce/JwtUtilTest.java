@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JwtUtilTest {
 
@@ -76,7 +75,39 @@ class JwtUtilTest {
         UserDetails user = buildUser("expired");
         String token = expiredUtil.generateToken(user);
 
-        assertThatThrownBy(() -> jwtUtil.isTokenValid(token, user));
+        assertThat(jwtUtil.isTokenValid(token, user)).isFalse();
+    }
+
+    @Test
+    void isTokenValid_tokenMalformado_retornaFalse() {
+        UserDetails user = buildUser("malformed");
+
+        assertThat(jwtUtil.isTokenValid("esto-no-es-un-jwt", user)).isFalse();
+    }
+
+    @Test
+    void isTokenValid_tokenConFirmaInvalida_retornaFalse() throws Exception {
+        JwtUtil otherSigner = new JwtUtil();
+        ReflectionTestUtils.setField(otherSigner, "secret",
+                "AnotherSecretKeyForJWTValidationLongEnough256bits");
+        ReflectionTestUtils.setField(otherSigner, "expiration", 86400000L);
+        Method init = JwtUtil.class.getDeclaredMethod("init");
+        init.setAccessible(true);
+        init.invoke(otherSigner);
+
+        UserDetails user = buildUser("signedByOther");
+        String foreignToken = otherSigner.generateToken(user);
+
+        assertThat(jwtUtil.isTokenValid(foreignToken, user)).isFalse();
+    }
+
+    @Test
+    void isTokenValid_tokenNuloOVacio_retornaFalse() {
+        UserDetails user = buildUser("blank");
+
+        assertThat(jwtUtil.isTokenValid(null, user)).isFalse();
+        assertThat(jwtUtil.isTokenValid("", user)).isFalse();
+        assertThat(jwtUtil.isTokenValid("   ", user)).isFalse();
     }
 
     private UserDetails buildUser(String username) {

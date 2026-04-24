@@ -141,6 +141,46 @@ class EndpointSeguridadAutorizacionIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void descuentosActivos_sinToken_retorna401o403() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/descuentos/activos"))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+
+        assertThat(result.getResponse().getStatus()).isIn(401, 403);
+    }
+
+    @Test
+    void clienteNoPuedeHacerPostPutDeleteEnCatalogo() throws Exception {
+        TestUser cliente = registrarCliente("cliente_catalogo_no_admin");
+
+        mockMvc.perform(post("/api/productos")
+                        .header("Authorization", "Bearer " + cliente.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "marcaId", 1,
+                                "categoriaId", 1,
+                                "nombre", "Producto cliente",
+                                "descripcion", "No debería crear",
+                                "estado", "ACTIVO",
+                                "precioBase", 100
+                        ))))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/categorias/{id}", 1)
+                        .header("Authorization", "Bearer " + cliente.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "nombre", "Cambio cliente",
+                                "descripcion", "No debería actualizar"
+                        ))))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/marcas/{id}", 1)
+                        .header("Authorization", "Bearer " + cliente.token()))
+                .andExpect(status().isForbidden());
+    }
+
     private TestUser registrarCliente(String prefijo) throws Exception {
         String username = prefijo + "_" + System.nanoTime();
         String password = "ClientePass1";

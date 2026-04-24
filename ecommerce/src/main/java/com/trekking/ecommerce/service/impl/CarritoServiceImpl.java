@@ -117,6 +117,9 @@ public class CarritoServiceImpl implements CarritoService {
             throw new BusinessRuleException("La cantidad debe ser al menos 1");
         }
         Carrito carrito = findById(idCarrito);
+        if (carrito.getEstado() == EstadoCarrito.CONVERTIDO || carrito.getEstado() == EstadoCarrito.ABANDONADO) {
+            throw new BusinessRuleException("No se pueden agregar items a un carrito en estado " + carrito.getEstado());
+        }
         VarianteProducto variante = varianteProductoService.findById(idVariante);
 
         if (variante.getProducto().getEstado() != EstadoProducto.ACTIVO) {
