@@ -497,14 +497,11 @@
           "name": "POST agregar item al carrito",
           "request": {
             "method": "POST",
-            "url": {
-              "raw": "{{base}}/api/carritos/{{carritoId}}/items?idVariante=1&cantidad=2",
-              "host": ["{{base}}"],
-              "path": ["api", "carritos", "{{carritoId}}", "items"],
-              "query": [
-                { "key": "idVariante", "value": "1" },
-                { "key": "cantidad", "value": "2" }
-              ]
+            "url": "{{base}}/api/carritos/{{carritoId}}/items",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idVariante\": 1,\n  \"cantidad\": 2\n}"
             }
           }
         },

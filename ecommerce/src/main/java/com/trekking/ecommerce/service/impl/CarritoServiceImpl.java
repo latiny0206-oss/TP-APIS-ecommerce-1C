@@ -77,6 +77,13 @@ public class CarritoServiceImpl implements CarritoService {
     @Override
     @Transactional
     public Carrito create(CarritoRequest request) {
+        boolean tieneCarritoActivo = carritoRepository
+                .findByUsuarioIdAndEstado(request.getUsuarioId(), EstadoCarrito.ACTIVO).isPresent()
+                || carritoRepository
+                .findByUsuarioIdAndEstado(request.getUsuarioId(), EstadoCarrito.VACIO).isPresent();
+        if (tieneCarritoActivo) {
+            throw new BusinessRuleException("El usuario ya tiene un carrito activo");
+        }
         Carrito carrito = Carrito.builder()
                 .usuario(usuarioService.findEntityById(request.getUsuarioId()))
                 .descuento(resolverDescuento(request.getDescuentoId()))
