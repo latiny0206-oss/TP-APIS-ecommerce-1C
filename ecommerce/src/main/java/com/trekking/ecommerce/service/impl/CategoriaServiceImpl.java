@@ -1,6 +1,7 @@
 package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.CategoriaRequest;
+import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Categoria;
 import com.trekking.ecommerce.repository.CategoriaRepository;
@@ -32,6 +33,9 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     @Transactional
     public Categoria create(CategoriaRequest request) {
+        if (categoriaRepository.existsByNombreIgnoreCase(request.getNombre())) {
+            throw new BusinessRuleException("Ya existe una categoría con el nombre: " + request.getNombre());
+        }
         Categoria categoria = Categoria.builder()
                 .nombre(request.getNombre())
                 .descripcion(request.getDescripcion())
@@ -42,6 +46,9 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     @Transactional
     public Categoria update(Long id, CategoriaRequest request) {
+        if (categoriaRepository.existsByNombreIgnoreCaseAndIdNot(request.getNombre(), id)) {
+            throw new BusinessRuleException("Ya existe otra categoría con el nombre: " + request.getNombre());
+        }
         Categoria actual = findById(id);
         actual.setNombre(request.getNombre());
         actual.setDescripcion(request.getDescripcion());

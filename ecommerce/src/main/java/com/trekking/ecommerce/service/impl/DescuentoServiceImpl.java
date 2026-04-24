@@ -47,6 +47,9 @@ public class DescuentoServiceImpl implements DescuentoService {
     @Override
     @Transactional
     public Descuento create(DescuentoRequest request) {
+        if (descuentoRepository.existsByNombreIgnoreCase(request.getNombre())) {
+            throw new BusinessRuleException("Ya existe un descuento con el nombre: " + request.getNombre());
+        }
         validarReglas(request);
         Descuento descuento = Descuento.builder()
                 .nombre(request.getNombre())
@@ -62,6 +65,9 @@ public class DescuentoServiceImpl implements DescuentoService {
     @Override
     @Transactional
     public Descuento update(Long id, DescuentoRequest request) {
+        if (descuentoRepository.existsByNombreIgnoreCaseAndIdNot(request.getNombre(), id)) {
+            throw new BusinessRuleException("Ya existe otro descuento con el nombre: " + request.getNombre());
+        }
         validarReglas(request);
         Descuento actual = findById(id);
         actual.setNombre(request.getNombre());
