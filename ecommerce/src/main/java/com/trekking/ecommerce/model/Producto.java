@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +33,11 @@ import lombok.ToString;
 @ToString(exclude = {"variantes"})
 @EqualsAndHashCode(exclude = {"variantes"})
 @Entity
-@Table(name = "producto")
+@Table(name = "producto",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_producto_nombre_marca_categoria",
+                columnNames = {"nombre", "id_marca", "id_categoria"}
+        ))
 public class Producto {
 
     @Id
