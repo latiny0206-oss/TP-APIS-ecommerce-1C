@@ -428,6 +428,7 @@
           ] } }]
         },
         { "name": "PUT actualizar item", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/items/{{item_carrito_id}}?cantidad={{cantidad_checkout}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
+        { "name": "DELETE eliminar item del carrito", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/items/{{item_carrito_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }] },
         { "name": "GET items", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/items" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
         { "name": "GET total", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/total" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(Number(pm.response.text())).to.be.at.least(0);"] } }] },
         {
