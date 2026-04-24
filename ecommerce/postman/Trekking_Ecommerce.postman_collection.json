@@ -5,27 +5,90 @@
     "description": "Coleccion QA para ejecutar flujos completos de la API de e-commerce trekking."
   },
   "variable": [
-    { "key": "base_url", "value": "http://localhost:8080" },
-    { "key": "admin_token", "value": "" },
-    { "key": "cliente_token", "value": "" },
-    { "key": "cliente2_token", "value": "" },
-    { "key": "cliente_username", "value": "" },
-    { "key": "cliente2_username", "value": "" },
-    { "key": "cliente_password", "value": "ClientePass1" },
-    { "key": "cliente2_password", "value": "ClientePass1" },
-    { "key": "cliente_user_id", "value": "" },
-    { "key": "cliente2_user_id", "value": "" },
-    { "key": "categoria_id", "value": "" },
-    { "key": "marca_id", "value": "" },
-    { "key": "producto_id", "value": "" },
-    { "key": "variante_id", "value": "" },
-    { "key": "descuento_id", "value": "" },
-    { "key": "carrito_id", "value": "" },
-    { "key": "item_carrito_id", "value": "" },
-    { "key": "orden_id", "value": "" },
-    { "key": "foto_id", "value": "" },
-    { "key": "stock_original", "value": "0" },
-    { "key": "cantidad_checkout", "value": "2" }
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "cliente_token",
+      "value": ""
+    },
+    {
+      "key": "cliente2_token",
+      "value": ""
+    },
+    {
+      "key": "cliente_username",
+      "value": "juanperez"
+    },
+    {
+      "key": "cliente2_username",
+      "value": "mariagomez"
+    },
+    {
+      "key": "cliente_password",
+      "value": "user123"
+    },
+    {
+      "key": "cliente2_password",
+      "value": "cliente123"
+    },
+    {
+      "key": "cliente_user_id",
+      "value": "2"
+    },
+    {
+      "key": "cliente2_user_id",
+      "value": "3"
+    },
+    {
+      "key": "categoria_id",
+      "value": "1"
+    },
+    {
+      "key": "marca_id",
+      "value": "2"
+    },
+    {
+      "key": "producto_id",
+      "value": "1"
+    },
+    {
+      "key": "variante_id",
+      "value": "1"
+    },
+    {
+      "key": "descuento_id",
+      "value": "1"
+    },
+    {
+      "key": "carrito_id",
+      "value": "1"
+    },
+    {
+      "key": "item_carrito_id",
+      "value": "1"
+    },
+    {
+      "key": "orden_id",
+      "value": "1"
+    },
+    {
+      "key": "foto_id",
+      "value": ""
+    },
+    {
+      "key": "stock_original",
+      "value": "12"
+    },
+    {
+      "key": "cantidad_checkout",
+      "value": "2"
+    }
   ],
   "item": [
     {
@@ -35,7 +98,12 @@
           "name": "POST Register cliente",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/register",
             "body": {
               "mode": "raw",
@@ -68,7 +136,12 @@
           "name": "POST Register cliente2",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/register",
             "body": {
               "mode": "raw",
@@ -78,7 +151,11 @@
           "event": [
             {
               "listen": "prerequest",
-              "script": { "exec": ["pm.collectionVariables.set('cliente2_username', 'cliente2_' + Date.now());"] }
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('cliente2_username', 'cliente2_' + Date.now());"
+                ]
+              }
             },
             {
               "listen": "test",
@@ -97,63 +174,125 @@
           "name": "POST Login admin",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            }
           },
-          "event": [{
-            "listen": "test",
-            "script": { "exec": [
-              "pm.test('Status 200', () => pm.response.to.have.status(200));",
-              "const json = pm.response.json();",
-              "pm.test('Token admin', () => pm.expect(json.token).to.be.a('string').and.not.empty);",
-              "pm.collectionVariables.set('admin_token', json.token);"
-            ] }
-          }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Token admin', () => pm.expect(json.token).to.be.a('string').and.not.empty);",
+                  "pm.collectionVariables.set('admin_token', json.token);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST Login cliente",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{cliente_username}}\",\n  \"password\": \"{{cliente_password}}\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{cliente_username}}\",\n  \"password\": \"{{cliente_password}}\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "const json = pm.response.json();",
-            "pm.collectionVariables.set('cliente_token', json.token);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('cliente_token', json.token);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST Login invalido (401)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"no_existe\",\n  \"password\": \"NoExiste123\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"no_existe\",\n  \"password\": \"NoExiste123\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 401', () => pm.response.to.have.status(401));",
-            "const json = pm.response.json();",
-            "pm.test('Error auth', () => { pm.expect(json.status).to.eql(401); pm.expect(json.error).to.eql('Unauthorized'); });"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));",
+                  "const json = pm.response.json();",
+                  "pm.test('Error auth', () => { pm.expect(json.status).to.eql(401); pm.expect(json.error).to.eql('Unauthorized'); });"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST Register password debil (400)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/auth/register",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"weak_{{$timestamp}}\",\n  \"email\": \"weak_{{$timestamp}}@mail.com\",\n  \"password\": \"abc\",\n  \"nombre\": \"Weak\",\n  \"apellido\": \"User\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"weak_{{$timestamp}}\",\n  \"email\": \"weak_{{$timestamp}}@mail.com\",\n  \"password\": \"abc\",\n  \"nombre\": \"Weak\",\n  \"apellido\": \"User\"\n}"
+            }
           },
           "event": [
-            { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('timestamp', Date.now());"] } },
-            { "listen": "test", "script": { "exec": [
-              "pm.test('Status 400', () => pm.response.to.have.status(400));",
-              "const json = pm.response.json();",
-              "pm.test('Validation error', () => { pm.expect(json.status).to.eql(400); pm.expect(json.error).to.include('Validation'); });"
-            ] } }
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('timestamp', Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "const json = pm.response.json();",
+                  "pm.test('Validation error', () => { pm.expect(json.status).to.eql(400); pm.expect(json.error).to.include('Validation'); });"
+                ]
+              }
+            }
           ]
         }
       ]
@@ -163,73 +302,169 @@
       "item": [
         {
           "name": "GET categorias (publico)",
-          "request": { "method": "GET", "url": "{{base_url}}/api/categorias" },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "pm.test('Array', () => pm.expect(pm.response.json()).to.be.an('array'));"
-          ] } }]
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/categorias"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST categoria (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/categorias",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Categoria QA {{$timestamp}}\",\n  \"descripcion\": \"Categoria de prueba\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Categoria QA {{$timestamp}}\",\n  \"descripcion\": \"Categoria de prueba\"\n}"
+            }
           },
           "event": [
-            { "listen": "prerequest", "script": { "exec": ["pm.collectionVariables.set('timestamp', Date.now());"] } },
-            { "listen": "test", "script": { "exec": [
-              "pm.test('Status 201', () => pm.response.to.have.status(201));",
-              "const json = pm.response.json();",
-              "pm.test('Categoria creada', () => { pm.expect(json.id).to.be.a('number'); pm.expect(json.nombre).to.be.a('string'); });",
-              "pm.collectionVariables.set('categoria_id', json.id);"
-            ] } }
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('timestamp', Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.test('Categoria creada', () => { pm.expect(json.id).to.be.a('number'); pm.expect(json.nombre).to.be.a('string'); });",
+                  "pm.collectionVariables.set('categoria_id', json.id);"
+                ]
+              }
+            }
           ]
         },
         {
           "name": "GET categoria por id",
-          "request": { "method": "GET", "url": "{{base_url}}/api/categorias/{{categoria_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "const json = pm.response.json();",
-            "pm.test('Estructura categoria', () => { pm.expect(json.id).to.eql(Number(pm.collectionVariables.get('categoria_id'))); pm.expect(json.nombre).to.be.a('string'); });"
-          ] } }]
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/categorias/{{categoria_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Estructura categoria', () => { pm.expect(json.id).to.eql(Number(pm.collectionVariables.get('categoria_id'))); pm.expect(json.nombre).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "PUT categoria (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/categorias/{{categoria_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Categoria QA actualizada\",\n  \"descripcion\": \"Update\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Categoria QA actualizada\",\n  \"descripcion\": \"Update\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "pm.test('Nombre actualizado', () => pm.expect(pm.response.json().nombre).to.eql('Categoria QA actualizada'));"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Nombre actualizado', () => pm.expect(pm.response.json().nombre).to.eql('Categoria QA actualizada'));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST categoria temp (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/categorias",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Categoria Temp {{$timestamp}}\",\n  \"descripcion\": \"Temp\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Categoria Temp {{$timestamp}}\",\n  \"descripcion\": \"Temp\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "pm.collectionVariables.set('categoria_temp_id', pm.response.json().id);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('categoria_temp_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "DELETE categoria temp (admin)",
           "request": {
             "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
             "url": "{{base_url}}/api/categorias/{{categoria_temp_id}}"
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -238,49 +473,154 @@
       "item": [
         {
           "name": "GET marcas (publico)",
-          "request": { "method": "GET", "url": "{{base_url}}/api/marcas" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/marcas"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST marca (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/marcas",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Marca QA {{$timestamp}}\",\n  \"descripcion\": \"Marca prueba\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Marca QA {{$timestamp}}\",\n  \"descripcion\": \"Marca prueba\"\n}"
+            }
           },
           "event": [
-            { "listen": "test", "script": { "exec": [
-              "pm.test('Status 201', () => pm.response.to.have.status(201));",
-              "pm.collectionVariables.set('marca_id', pm.response.json().id);"
-            ] } }
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('marca_id', pm.response.json().id);"
+                ]
+              }
+            }
           ]
         },
-        { "name": "GET marca por id", "request": { "method": "GET", "url": "{{base_url}}/api/marcas/{{marca_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
+        {
+          "name": "GET marca por id",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/marcas/{{marca_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT marca (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/marcas/{{marca_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Marca QA actualizada\",\n  \"descripcion\": \"Update\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Marca QA actualizada\",\n  \"descripcion\": \"Update\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST marca temp (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/marcas",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Marca Temp {{$timestamp}}\",\n  \"descripcion\": \"Temp\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Marca Temp {{$timestamp}}\",\n  \"descripcion\": \"Temp\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('marca_temp_id', pm.response.json().id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('marca_temp_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "DELETE marca temp (admin)",
-          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/marcas/{{marca_temp_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }]
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/marcas/{{marca_temp_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -291,31 +631,168 @@
           "name": "POST producto (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/productos",
-            "body": { "mode": "raw", "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"Producto QA {{$timestamp}}\",\n  \"descripcion\": \"Producto de prueba\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 1500.00\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"Producto QA {{$timestamp}}\",\n  \"descripcion\": \"Producto de prueba\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 1500.00\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "const json = pm.response.json();",
-            "pm.collectionVariables.set('producto_id', json.id);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('producto_id', json.id);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET productos", "request": { "method": "GET", "url": "{{base_url}}/api/productos" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET producto por id", "request": { "method": "GET", "url": "{{base_url}}/api/productos/{{producto_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET por categoria", "request": { "method": "GET", "url": "{{base_url}}/api/productos/categoria/{{categoria_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET por marca", "request": { "method": "GET", "url": "{{base_url}}/api/productos/marca/{{marca_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET por estado", "request": { "method": "GET", "url": "{{base_url}}/api/productos/estado/ACTIVO" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET disponible", "request": { "method": "GET", "url": "{{base_url}}/api/productos/{{producto_id}}/disponible" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.a('boolean');"] } }] },
+        {
+          "name": "GET productos",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET producto por id",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos/{{producto_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET por categoria",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos/categoria/{{categoria_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET por marca",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos/marca/{{marca_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET por estado",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos/estado/ACTIVO"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET disponible",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/productos/{{producto_id}}/disponible"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.a('boolean');"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT producto (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/productos/{{producto_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"Producto QA actualizado\",\n  \"descripcion\": \"Update\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 1600.00\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"Producto QA actualizado\",\n  \"descripcion\": \"Update\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 1600.00\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -326,30 +803,136 @@
           "name": "POST variante (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/variantes",
-            "body": { "mode": "raw", "raw": "{\n  \"productoId\": {{producto_id}},\n  \"color\": \"Negro\",\n  \"talla\": \"42-{{$timestamp}}\",\n  \"material\": \"Cuero\",\n  \"peso\": 1.2,\n  \"stock\": 12,\n  \"precio\": 1600.00,\n  \"estacion\": \"OTONO\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": {{producto_id}},\n  \"color\": \"Negro\",\n  \"talla\": \"42-{{$timestamp}}\",\n  \"material\": \"Cuero\",\n  \"peso\": 1.2,\n  \"stock\": 12,\n  \"precio\": 1600.00,\n  \"estacion\": \"OTONO\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "const json = pm.response.json();",
-            "pm.collectionVariables.set('variante_id', json.id);",
-            "pm.collectionVariables.set('stock_original', json.stock);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('variante_id', json.id);",
+                  "pm.collectionVariables.set('stock_original', json.stock);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET variantes", "request": { "method": "GET", "url": "{{base_url}}/api/variantes" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET variante por id", "request": { "method": "GET", "url": "{{base_url}}/api/variantes/{{variante_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET precio", "request": { "method": "GET", "url": "{{base_url}}/api/variantes/{{variante_id}}/precio" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(Number(pm.response.text())).to.be.greaterThan(0);"] } }] },
-        { "name": "GET stock/disponible", "request": { "method": "GET", "url": "{{base_url}}/api/variantes/{{variante_id}}/stock/disponible?cantidad=2" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.a('boolean');"] } }] },
+        {
+          "name": "GET variantes",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/variantes"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET variante por id",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/variantes/{{variante_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET precio",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/variantes/{{variante_id}}/precio"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(Number(pm.response.text())).to.be.greaterThan(0);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET stock/disponible",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/variantes/{{variante_id}}/stock/disponible?cantidad=2"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.a('boolean');"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT variante (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/variantes/{{variante_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"productoId\": {{producto_id}},\n  \"color\": \"Negro\",\n  \"talla\": \"43-{{$timestamp}}\",\n  \"material\": \"Cuero\",\n  \"peso\": 1.3,\n  \"stock\": 12,\n  \"precio\": 1700.00,\n  \"estacion\": \"INVIERNO\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productoId\": {{producto_id}},\n  \"color\": \"Negro\",\n  \"talla\": \"43-{{$timestamp}}\",\n  \"material\": \"Cuero\",\n  \"peso\": 1.3,\n  \"stock\": 12,\n  \"precio\": 1700.00,\n  \"estacion\": \"INVIERNO\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -360,28 +943,158 @@
           "name": "POST descuento (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/descuentos",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Descuento QA {{$timestamp}}\",\n  \"tipo\": \"FIJO\",\n  \"valor\": 500.00,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2027-12-31\",\n  \"estado\": \"ACTIVO\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Descuento QA {{$timestamp}}\",\n  \"tipo\": \"FIJO\",\n  \"valor\": 500.00,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2027-12-31\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "pm.collectionVariables.set('descuento_id', pm.response.json().id);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('descuento_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET descuentos (admin)", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/descuentos" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET activos (cliente auth)", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/descuentos/activos" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET vigente", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/descuentos/{{descuento_id}}/vigente" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.a('boolean');"] } }] },
-        { "name": "GET calcular", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/descuentos/{{descuento_id}}/calcular?monto=2000" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(Number(pm.response.text())).to.be.greaterThan(0);"] } }] },
+        {
+          "name": "GET descuentos (admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/descuentos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET activos (cliente auth)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/descuentos/activos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET vigente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/descuentos/{{descuento_id}}/vigente"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.a('boolean');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET calcular",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/descuentos/{{descuento_id}}/calcular?monto=2000"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(Number(pm.response.text())).to.be.greaterThan(0);"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT descuento (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/descuentos/{{descuento_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Descuento QA actualizado\",\n  \"tipo\": \"FIJO\",\n  \"valor\": 400.00,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2027-12-31\",\n  \"estado\": \"ACTIVO\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Descuento QA actualizado\",\n  \"tipo\": \"FIJO\",\n  \"valor\": 400.00,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2027-12-31\",\n  \"estado\": \"ACTIVO\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -392,104 +1105,470 @@
           "name": "POST crear carrito cliente",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/carritos",
-            "body": { "mode": "raw", "raw": "{}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "const json = pm.response.json();",
-            "pm.collectionVariables.set('carrito_id', json.id);",
-            "pm.collectionVariables.set('cliente_user_id', json.usuarioId);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('carrito_id', json.id);",
+                  "pm.collectionVariables.set('cliente_user_id', json.usuarioId);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET carrito por id", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
+        {
+          "name": "GET carrito por id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT carrito aplicar descuento",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/carritos/{{carrito_id}}",
-            "body": { "mode": "raw", "raw": "{ \"descuentoId\": {{descuento_id}} }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"descuentoId\": {{descuento_id}} }"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST agregar item",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/carritos/{{carrito_id}}/items",
-            "body": { "mode": "raw", "raw": "{ \"idVariante\": {{variante_id}}, \"cantidad\": {{cantidad_checkout}} }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"idVariante\": {{variante_id}}, \"cantidad\": {{cantidad_checkout}} }"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "pm.collectionVariables.set('item_carrito_id', pm.response.json().id);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('item_carrito_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "PUT actualizar item", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/items/{{item_carrito_id}}?cantidad={{cantidad_checkout}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET items", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/items" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
-        { "name": "GET total", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/total" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(Number(pm.response.text())).to.be.at.least(0);"] } }] },
+        {
+          "name": "PUT actualizar item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}/items/{{item_carrito_id}}?cantidad={{cantidad_checkout}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}/items"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET total",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}/total"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(Number(pm.response.text())).to.be.at.least(0);"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "POST checkout",
-          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}/checkout" },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "const json = pm.response.json();",
-            "pm.test('Orden creada', () => { pm.expect(json.id).to.be.a('number'); pm.expect(json.estado).to.eql('PENDIENTE'); });",
-            "pm.collectionVariables.set('orden_id', json.id);"
-          ] } }]
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}/checkout"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Orden creada', () => { pm.expect(json.id).to.be.a('number'); pm.expect(json.estado).to.eql('PENDIENTE'); });",
+                  "pm.collectionVariables.set('orden_id', json.id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "GET variante para validar stock tras checkout",
-          "request": { "method": "GET", "url": "{{base_url}}/api/variantes/{{variante_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 200', () => pm.response.to.have.status(200));",
-            "const json = pm.response.json();",
-            "const original = Number(pm.collectionVariables.get('stock_original'));",
-            "const qty = Number(pm.collectionVariables.get('cantidad_checkout'));",
-            "pm.test('Stock descontado', () => pm.expect(json.stock).to.eql(original - qty));"
-          ] } }]
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/variantes/{{variante_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "const original = Number(pm.collectionVariables.get('stock_original'));",
+                  "const qty = Number(pm.collectionVariables.get('cantidad_checkout'));",
+                  "pm.test('Stock descontado', () => pm.expect(json.stock).to.eql(original - qty));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Acceso denegado: cliente2 intenta GET carrito cliente1",
-          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente2_token}}" }], "url": "{{base_url}}/api/carritos/{{carrito_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"] } }]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente2_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/carritos/{{carrito_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
     {
       "name": "Ordenes",
       "item": [
-        { "name": "GET orden por id", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/ordenes/{{orden_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "POST confirmar", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/ordenes/{{orden_id}}/confirmar" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET monto-final", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/ordenes/{{orden_id}}/monto-final" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET items orden", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/ordenes/{{orden_id}}/items" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
-        { "name": "GET historial por usuario", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/ordenes/usuario/{{cliente_user_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
+        {
+          "name": "GET orden por id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/{{orden_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST confirmar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/{{orden_id}}/confirmar"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET monto-final",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/{{orden_id}}/monto-final"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET items orden",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/{{orden_id}}/items"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET historial por usuario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/usuario/{{cliente_user_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "POST crear orden (admin CRUD)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/ordenes",
-            "body": { "mode": "raw", "raw": "{\n  \"usuarioId\": {{cliente_user_id}},\n  \"carritoId\": null,\n  \"descuentoId\": null,\n  \"fechaCreacion\": \"2026-04-20T10:00:00\",\n  \"montoFinal\": 1000.00,\n  \"estado\": \"PENDIENTE\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": {{cliente_user_id}},\n  \"carritoId\": null,\n  \"descuentoId\": null,\n  \"fechaCreacion\": \"2026-04-20T10:00:00\",\n  \"montoFinal\": 1000.00,\n  \"estado\": \"PENDIENTE\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('orden_admin_id', pm.response.json().id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('orden_admin_id', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "PUT orden (admin CRUD)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/ordenes/{{orden_admin_id}}",
-            "body": { "mode": "raw", "raw": "{\n  \"usuarioId\": {{cliente_user_id}},\n  \"carritoId\": null,\n  \"descuentoId\": null,\n  \"fechaCreacion\": \"2026-04-20T10:00:00\",\n  \"montoFinal\": 1200.00,\n  \"estado\": \"PENDIENTE\"\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": {{cliente_user_id}},\n  \"carritoId\": null,\n  \"descuentoId\": null,\n  \"fechaCreacion\": \"2026-04-20T10:00:00\",\n  \"montoFinal\": 1200.00,\n  \"estado\": \"PENDIENTE\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "DELETE orden (admin CRUD)",
-          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/ordenes/{{orden_admin_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }]
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/ordenes/{{orden_admin_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -500,47 +1579,165 @@
           "name": "POST foto multipart (admin)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
             "url": "{{base_url}}/api/fotos",
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "varianteId", "value": "{{variante_id}}", "type": "text" },
-                { "key": "orden", "value": "1", "type": "text" },
-                { "key": "archivo", "type": "file", "src": "./sample.jpg" }
+                {
+                  "key": "varianteId",
+                  "value": "{{variante_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "orden",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "./sample.jpg"
+                }
               ]
             }
           },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 201', () => pm.response.to.have.status(201));",
-            "const json = pm.response.json();",
-            "pm.collectionVariables.set('foto_id', json.id);"
-          ] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('foto_id', json.id);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET fotos", "request": { "method": "GET", "url": "{{base_url}}/api/fotos" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
-        { "name": "GET foto por id", "request": { "method": "GET", "url": "{{base_url}}/api/fotos/{{foto_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }] },
-        { "name": "GET fotos por variante", "request": { "method": "GET", "url": "{{base_url}}/api/fotos/variante/{{variante_id}}" }, "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.expect(pm.response.json()).to.be.an('array');"] } }] },
+        {
+          "name": "GET fotos",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/fotos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET foto por id",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/fotos/{{foto_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET fotos por variante",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/fotos/variante/{{variante_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "PUT foto multipart (admin)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
             "url": "{{base_url}}/api/fotos/{{foto_id}}",
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "varianteId", "value": "{{variante_id}}", "type": "text" },
-                { "key": "orden", "value": "2", "type": "text" },
-                { "key": "archivo", "type": "file", "src": "./sample-updated.jpg" }
+                {
+                  "key": "varianteId",
+                  "value": "{{variante_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "orden",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "./sample-updated.jpg"
+                }
               ]
             }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "DELETE foto (admin)",
-          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/api/fotos/{{foto_id}}" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 204', () => pm.response.to.have.status(204));"] } }]
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/fotos/{{foto_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -549,28 +1746,76 @@
       "item": [
         {
           "name": "Sin token a endpoint protegido",
-          "request": { "method": "GET", "url": "{{base_url}}/api/carritos" },
-          "event": [{ "listen": "test", "script": { "exec": [
-            "pm.test('Status 401 o 403', () => pm.expect([401,403]).to.include(pm.response.code));"
-          ] } }]
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/carritos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 o 403', () => pm.expect([401,403]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "CLIENTE intenta POST /api/productos",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{base_url}}/api/productos",
-            "body": { "mode": "raw", "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"No permitido\",\n  \"descripcion\": \"forbidden\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 100\n}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marcaId\": {{marca_id}},\n  \"categoriaId\": {{categoria_id}},\n  \"nombre\": \"No permitido\",\n  \"descripcion\": \"forbidden\",\n  \"estado\": \"ACTIVO\",\n  \"precioBase\": 100\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "CLIENTE intenta GET /api/usuarios",
-          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{cliente_token}}" }], "url": "{{base_url}}/api/usuarios" },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"] } }]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cliente_token}}"
+              }
+            ],
+            "url": "{{base_url}}/api/usuarios"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
         }
       ]
     }
   ]
 }
-
