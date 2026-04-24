@@ -65,15 +65,17 @@ public class SecurityBeansConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
+            .headers(headers -> headers.frameOptions(f -> f.disable()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
 
-                // Swagger UI
+                // Swagger UI y H2 Console
                 .requestMatchers(
                     "/swagger-ui.html",
                     "/swagger-ui/**",
                     "/api-docs/**",
-                    "/v3/api-docs/**"
+                    "/v3/api-docs/**",
+                    "/h2-console/**"
                 ).permitAll()
 
                 // Endpoints públicos de autenticación
