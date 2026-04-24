@@ -552,43 +552,63 @@
           }
         },
         {
-          "name": "GET fotos por producto",
+          "name": "GET fotos por variante",
           "request": {
             "method": "GET",
-            "url": "{{base}}/api/fotos/producto/{{productoId}}"
+            "url": "{{base}}/api/fotos/variante/{{varianteId}}"
           }
         },
         {
-          "name": "POST crear foto",
+          "name": "POST crear foto (multipart)",
           "request": {
             "method": "POST",
             "url": "{{base}}/api/fotos",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"productoId\": 1,\n  \"nombre\": \"bota-x-ultra-4-negro.jpg\",\n  \"orden\": 1\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "varianteId",
+                  "value": "{{varianteId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "orden",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
             }
           }
         },
         {
-          "name": "PUT actualizar foto",
+          "name": "PUT actualizar foto (multipart)",
           "request": {
             "method": "PUT",
             "url": "{{base}}/api/fotos/{{fotoId}}",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"productoId\": 1,\n  \"nombre\": \"bota-x-ultra-4-negro-lateral.jpg\",\n  \"orden\": 2\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "varianteId",
+                  "value": "{{varianteId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "orden",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
             }
           }
         },
