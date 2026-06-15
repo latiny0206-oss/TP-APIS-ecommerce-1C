@@ -14,4 +14,5 @@ public class ContactoResponse {
     String mensaje;
     LocalDateTime fechaEnvio;
     boolean leido;
+    boolean emailEnviado;
 }

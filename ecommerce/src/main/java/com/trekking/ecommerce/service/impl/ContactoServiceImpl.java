@@ -1,9 +1,11 @@
 package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.ContactoRequest;
+import com.trekking.ecommerce.dto.ContactoResponse;
 import com.trekking.ecommerce.model.ContactoMensaje;
 import com.trekking.ecommerce.repository.ContactoRepository;
 import com.trekking.ecommerce.service.ContactoService;
+import com.trekking.ecommerce.service.MailService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContactoServiceImpl implements ContactoService {
 
     private final ContactoRepository contactoRepository;
+    private final MailService mailService;
 
     @Override
     @Transactional
-    public ContactoMensaje create(ContactoRequest request) {
+    public ContactoResponse create(ContactoRequest request) {
         ContactoMensaje mensaje = ContactoMensaje.builder()
                 .nombre(request.getNombre())
                 .email(request.getEmail())
@@ -27,7 +30,21 @@ public class ContactoServiceImpl implements ContactoService {
                 .fechaEnvio(LocalDateTime.now())
                 .leido(false)
                 .build();
-        return contactoRepository.save(mensaje);
+        ContactoMensaje guardado = contactoRepository.save(mensaje);
+
+        // El mensaje ya está en BD; el email es best-effort
+        boolean emailOk = mailService.enviarNotificaciones(guardado);
+
+        return ContactoResponse.builder()
+                .id(guardado.getId())
+                .nombre(guardado.getNombre())
+                .email(guardado.getEmail())
+                .asunto(guardado.getAsunto())
+                .mensaje(guardado.getMensaje())
+                .fechaEnvio(guardado.getFechaEnvio())
+                .leido(guardado.isLeido())
+                .emailEnviado(emailOk)
+                .build();
     }
 
     @Override

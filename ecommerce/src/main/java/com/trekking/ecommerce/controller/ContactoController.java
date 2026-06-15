@@ -25,7 +25,7 @@ public class ContactoController {
 
     @PostMapping
     public ResponseEntity<ContactoResponse> enviar(@Valid @RequestBody ContactoRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(contactoService.create(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(contactoService.create(request));
     }
 
     @GetMapping
@@ -43,6 +43,7 @@ public class ContactoController {
                 .mensaje(m.getMensaje())
                 .fechaEnvio(m.getFechaEnvio())
                 .leido(m.isLeido())
+                .emailEnviado(false)
                 .build();
     }
 }
