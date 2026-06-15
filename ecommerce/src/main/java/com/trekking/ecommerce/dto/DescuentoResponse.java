@@ -12,6 +12,7 @@ import lombok.Value;
 public class DescuentoResponse {
     Long id;
     String nombre;
+    String codigo;
     TipoDescuento tipo;
     BigDecimal valor;
     LocalDate fechaInicio;

@@ -81,6 +81,13 @@ public class SecurityBeansConfig {
                 // Endpoints públicos de autenticación
                 .requestMatchers("/api/auth/**").permitAll()
 
+                // Formulario de contacto (envío público, lectura solo ADMIN)
+                .requestMatchers(HttpMethod.POST, "/api/contacto").permitAll()
+                .requestMatchers("/api/contacto/**").hasRole("ADMIN")
+
+                // Dashboard y rutas admin
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                 // Catálogo público (solo lectura)
                 .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
@@ -105,9 +112,10 @@ public class SecurityBeansConfig {
                 .requestMatchers(HttpMethod.PUT,    "/api/fotos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/fotos/**").hasRole("ADMIN")
 
-                // Usuarios y descuentos (solo ADMIN)
+                // Usuarios y descuentos (solo ADMIN, con excepciones autenticadas)
                 .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/descuentos/activos").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/descuentos/buscar").authenticated()
                 .requestMatchers("/api/descuentos/**").hasRole("ADMIN")
 
                 // Todo lo demás requiere autenticación (carritos, órdenes, etc.)

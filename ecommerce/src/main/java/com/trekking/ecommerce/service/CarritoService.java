@@ -1,6 +1,7 @@
 package com.trekking.ecommerce.service;
 
 import com.trekking.ecommerce.dto.CarritoRequest;
+import com.trekking.ecommerce.dto.CheckoutRequest;
 import com.trekking.ecommerce.model.Carrito;
 import com.trekking.ecommerce.model.ItemCarrito;
 import com.trekking.ecommerce.model.Orden;
@@ -22,6 +23,7 @@ public interface CarritoService {
     BigDecimal calcularTotal(Long idCarrito);
     void vaciarCarrito(Long idCarrito);
     List<ItemCarrito> obtenerItems(Long idCarrito);
-    Orden realizarCompra(Long idCarrito);
+    Orden realizarCompra(Long idCarrito, CheckoutRequest checkoutRequest);
+    Carrito aplicarDescuentoPorCodigo(Long idCarrito, String codigo);
     int vaciarCarritosAbandonados(int diasInactividad);
 }

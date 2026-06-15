@@ -1,6 +1,7 @@
 package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.CarritoRequest;
+import com.trekking.ecommerce.dto.CheckoutRequest;
 import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Carrito;
@@ -134,7 +135,14 @@ public class CarritoServiceImpl implements CarritoService {
                         .precioUnitario(variante.getPrecio())
                         .build());
 
-        item.setCantidad(item.getCantidad() + cantidad);
+        int nuevaCantidad = item.getCantidad() + cantidad;
+        int stockDisponible = variante.getStock() != null ? variante.getStock() : 0;
+        if (stockDisponible < nuevaCantidad) {
+            throw new BusinessRuleException("Stock insuficiente para variante id " + idVariante
+                    + ". Stock disponible: " + stockDisponible + ", solicitado en carrito: " + nuevaCantidad);
+        }
+
+        item.setCantidad(nuevaCantidad);
         item.setPrecioUnitario(variante.getPrecio());
         ItemCarrito saved = itemCarritoRepository.save(item);
 
@@ -170,6 +178,12 @@ public class CarritoServiceImpl implements CarritoService {
                 .orElseThrow(() -> new ResourceNotFoundException("ItemCarrito", idItemCarrito));
         if (!item.getCarrito().getId().equals(idCarrito)) {
             throw new BusinessRuleException("El item id " + idItemCarrito + " no pertenece al carrito id " + idCarrito);
+        }
+        VarianteProducto variante = item.getVariante();
+        int stockDisponible = variante.getStock() != null ? variante.getStock() : 0;
+        if (stockDisponible < cantidad) {
+            throw new BusinessRuleException("Stock insuficiente para variante id " + variante.getId()
+                    + ". Stock disponible: " + stockDisponible + ", solicitado: " + cantidad);
         }
         item.setCantidad(cantidad);
         ItemCarrito saved = itemCarritoRepository.save(item);
@@ -240,16 +254,9 @@ public class CarritoServiceImpl implements CarritoService {
         return inactivos.size();
     }
 
-    /**
-     * Realiza el checkout del carrito:
-     * 1. Valida que no esté vacío.
-     * 2. Descuenta el stock de cada variante (bug fix).
-     * 3. Crea la Orden con snapshot de precios.
-     * 4. Marca el carrito como CONVERTIDO.
-     */
     @Override
     @Transactional
-    public Orden realizarCompra(Long idCarrito) {
+    public Orden realizarCompra(Long idCarrito, CheckoutRequest checkoutRequest) {
         Carrito carrito = findById(idCarrito);
         List<ItemCarrito> items = obtenerItems(idCarrito);
         if (items.isEmpty()) {
@@ -258,15 +265,25 @@ public class CarritoServiceImpl implements CarritoService {
 
         BigDecimal total = calcularTotal(idCarrito);
 
-        Orden orden = Orden.builder()
+        Orden.OrdenBuilder builder = Orden.builder()
                 .usuario(carrito.getUsuario())
                 .carrito(carrito)
                 .descuento(carrito.getDescuento())
                 .fechaCreacion(LocalDateTime.now())
                 .montoFinal(total)
-                .estado(EstadoOrden.PENDIENTE)
-                .build();
-        Orden ordenGuardada = ordenRepository.save(orden);
+                .estado(EstadoOrden.PENDIENTE);
+
+        if (checkoutRequest != null) {
+            builder.nombreDestinatario(checkoutRequest.getNombreDestinatario())
+                   .direccion(checkoutRequest.getDireccion())
+                   .ciudad(checkoutRequest.getCiudad())
+                   .provincia(checkoutRequest.getProvincia())
+                   .codigoPostal(checkoutRequest.getCodigoPostal())
+                   .telefono(checkoutRequest.getTelefono())
+                   .metodoPago(checkoutRequest.getMetodoPago());
+        }
+
+        Orden ordenGuardada = ordenRepository.save(builder.build());
 
         List<ItemOrden> itemsOrden = items.stream()
                 .map(item -> ItemOrden.builder()
@@ -278,7 +295,6 @@ public class CarritoServiceImpl implements CarritoService {
                 .toList();
         itemOrdenRepository.saveAll(itemsOrden);
 
-        // Descontar stock por cada ítem (bug fix)
         for (ItemCarrito item : items) {
             varianteProductoService.descontarStock(item.getVariante().getId(), item.getCantidad());
         }
@@ -289,6 +305,23 @@ public class CarritoServiceImpl implements CarritoService {
         itemCarritoRepository.deleteAll(items);
 
         return ordenGuardada;
+    }
+
+    @Override
+    @Transactional
+    public Carrito aplicarDescuentoPorCodigo(Long idCarrito, String codigo) {
+        Carrito carrito = findById(idCarrito);
+        if (carrito.getEstado() == EstadoCarrito.CONVERTIDO || carrito.getEstado() == EstadoCarrito.ABANDONADO) {
+            throw new BusinessRuleException("No se puede modificar un carrito en estado " + carrito.getEstado());
+        }
+        Descuento descuento = descuentoRepository.findByCodigoIgnoreCase(codigo)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe un cupón con código: " + codigo));
+        if (!estaVigente(descuento)) {
+            throw new BusinessRuleException("El cupón '" + codigo + "' no está vigente");
+        }
+        carrito.setDescuento(descuento);
+        carrito.setMontoTotal(calcularTotal(idCarrito));
+        return carritoRepository.save(carrito);
     }
 
     private Descuento resolverDescuento(Long descuentoId) {

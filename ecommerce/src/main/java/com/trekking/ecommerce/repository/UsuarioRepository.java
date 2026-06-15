@@ -1,11 +1,12 @@
 package com.trekking.ecommerce.repository;
 
 import com.trekking.ecommerce.model.Usuario;
+import com.trekking.ecommerce.model.enums.RolUsuario;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsername(String username);
     Optional<Usuario> findByEmail(String email);
+    long countByRol(RolUsuario rol);
 }
-

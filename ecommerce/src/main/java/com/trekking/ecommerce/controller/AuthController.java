@@ -1,15 +1,18 @@
 package com.trekking.ecommerce.controller;
 
 import com.trekking.ecommerce.dto.AuthResponse;
+import com.trekking.ecommerce.dto.ForgotPasswordRequest;
 import com.trekking.ecommerce.dto.LoginRequest;
 import com.trekking.ecommerce.dto.RegisterRequest;
 import com.trekking.ecommerce.dto.UsuarioRequest;
 import com.trekking.ecommerce.dto.UsuarioResponse;
+import com.trekking.ecommerce.model.Usuario;
 import com.trekking.ecommerce.model.enums.EstadoUsuario;
 import com.trekking.ecommerce.model.enums.RolUsuario;
 import com.trekking.ecommerce.security.JwtUtil;
 import com.trekking.ecommerce.service.UsuarioService;
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +43,13 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String token = jwtUtil.generateToken(userDetails);
         String rol = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
+        Usuario usuario = usuarioService.findByUsername(request.getUsername());
         return ResponseEntity.ok(AuthResponse.builder()
+                .id(usuario.getId())
                 .token(token)
-                .username(request.getUsername())
+                .username(usuario.getUsername())
+                .nombre(usuario.getNombre())
+                .email(usuario.getEmail())
                 .rol(rol)
                 .build());
     }
@@ -62,9 +69,18 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getUsername());
         String token = jwtUtil.generateToken(userDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(AuthResponse.builder()
+                .id(usuario.getId())
                 .token(token)
                 .username(usuario.getUsername())
+                .nombre(usuario.getNombre())
+                .email(usuario.getEmail())
                 .rol(usuario.getRol().name())
                 .build());
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(Map.of("message",
+                "Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña."));
     }
 }

@@ -92,10 +92,10 @@ public class OrdenServiceImpl implements OrdenService {
     @Transactional
     public void delete(Long id) {
         Orden orden = findById(id);
-        // Restaurar stock solo si la orden no fue entregada ni ya cancelada
         if (orden.getEstado() != EstadoOrden.ENTREGADA && orden.getEstado() != EstadoOrden.CANCELADA) {
             restaurarStockDeOrden(orden);
         }
+        itemOrdenRepository.deleteAll(itemOrdenRepository.findByOrdenId(id));
         ordenRepository.deleteById(id);
     }
 

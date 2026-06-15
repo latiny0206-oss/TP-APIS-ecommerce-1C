@@ -1,7 +1,9 @@
 package com.trekking.ecommerce.controller;
 
+import com.trekking.ecommerce.dto.AplicarDescuentoRequest;
 import com.trekking.ecommerce.dto.CarritoRequest;
 import com.trekking.ecommerce.dto.CarritoResponse;
+import com.trekking.ecommerce.dto.CheckoutRequest;
 import com.trekking.ecommerce.dto.ItemCarritoRequest;
 import com.trekking.ecommerce.dto.ItemCarritoResponse;
 import com.trekking.ecommerce.dto.OrdenResponse;
@@ -117,10 +119,20 @@ public class CarritoController extends AuthenticatedController {
     }
 
     @PostMapping("/{id}/checkout")
-    public ResponseEntity<OrdenResponse> realizarCompra(@PathVariable Long id) {
+    public ResponseEntity<OrdenResponse> realizarCompra(
+            @PathVariable Long id,
+            @RequestBody(required = false) CheckoutRequest checkoutRequest) {
         validarPropietario(carritoService.findById(id).getUsuario().getId());
-        Orden orden = carritoService.realizarCompra(id);
+        Orden orden = carritoService.realizarCompra(id, checkoutRequest);
         return ResponseEntity.ok(toOrdenResponse(orden));
+    }
+
+    @PutMapping("/{id}/descuento")
+    public ResponseEntity<CarritoResponse> aplicarDescuento(
+            @PathVariable Long id,
+            @Valid @RequestBody AplicarDescuentoRequest request) {
+        validarPropietario(carritoService.findById(id).getUsuario().getId());
+        return ResponseEntity.ok(toResponse(carritoService.aplicarDescuentoPorCodigo(id, request.getCodigo())));
     }
 
     // ─── Mapeo a DTOs ────────────────────────────────────────────────────────
@@ -176,6 +188,13 @@ public class CarritoController extends AuthenticatedController {
                 .montoFinal(o.getMontoFinal())
                 .estado(o.getEstado())
                 .items(items)
+                .nombreDestinatario(o.getNombreDestinatario())
+                .direccion(o.getDireccion())
+                .ciudad(o.getCiudad())
+                .provincia(o.getProvincia())
+                .codigoPostal(o.getCodigoPostal())
+                .telefono(o.getTelefono())
+                .metodoPago(o.getMetodoPago())
                 .build();
     }
 }

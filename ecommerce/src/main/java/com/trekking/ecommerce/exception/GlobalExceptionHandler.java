@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
-                .message("Parmetro requerido ausente: " + ex.getParameterName())
+                .message("Parámetro requerido ausente: " + ex.getParameterName())
                 .build());
     }
 
@@ -135,8 +135,8 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
-                .message("Error de tipo en el parmetro '" + ex.getName() + "'. Se esperaba: " + 
-                         (ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "tipo vlido"))
+                .message("Error de tipo en el parámetro '" + ex.getName() + "'. Se esperaba: " +
+                         (ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "tipo válido"))
                 .build());
     }
 

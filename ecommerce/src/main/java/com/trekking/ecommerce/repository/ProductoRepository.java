@@ -12,4 +12,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByMarcaId(Long marcaId);
 
     List<Producto> findByEstado(EstadoProducto estado);
+
+    List<Producto> findByEstadoAndCategoriaId(EstadoProducto estado, Long categoriaId);
+
+    List<Producto> findByEstadoAndMarcaId(EstadoProducto estado, Long marcaId);
+
+    long countByEstado(EstadoProducto estado);
 }

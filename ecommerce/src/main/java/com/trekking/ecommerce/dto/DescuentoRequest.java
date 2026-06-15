@@ -17,6 +17,9 @@ public class DescuentoRequest {
     @Size(max = 100)
     private String nombre;
 
+    @Size(max = 50)
+    private String codigo;
+
     @NotNull
     private TipoDescuento tipo;
 

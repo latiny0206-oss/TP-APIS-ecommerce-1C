@@ -8,7 +8,10 @@ import lombok.Value;
 @Builder
 @AllArgsConstructor
 public class AuthResponse {
+    Long id;
     String token;
     String username;
+    String nombre;
+    String email;
     String rol;
 }

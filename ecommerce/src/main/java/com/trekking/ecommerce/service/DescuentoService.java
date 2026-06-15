@@ -9,6 +9,7 @@ public interface DescuentoService {
     List<Descuento> findAll();
     List<Descuento> findActivos();
     Descuento findById(Long id);
+    Descuento findByCodigo(String codigo);
     Descuento create(DescuentoRequest request);
     Descuento update(Long id, DescuentoRequest request);
     void delete(Long id);

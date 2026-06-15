@@ -20,10 +20,10 @@ INSERT IGNORE INTO usuario (id_usuario, username, email, password, nombre, apell
     (3, 'mariagomez', 'maria.gomez@mail.com',  '$2a$10$PBo6KmC7d.YhT25MuPM64uRr9z1NMde53sqQ5rl0f7GW3J5kXXcq2', 'Maria',   'Gomez',    'CLIENTE', 'ACTIVO'),
     (4, 'inactivo',   'inactivo@trekking.com', '$2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Usuario', 'Inactivo', 'CLIENTE', 'INACTIVO');
 
-INSERT IGNORE INTO descuento (id_descuento, nombre, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
-    (1, 'Promo Otono 2026',    'PORCENTAJE', 15.00,   '2026-04-01', '2026-06-30', 'ACTIVO'),
-    (2, 'Descuento Fijo 5000', 'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
-    (3, 'Black Friday 2025',   'PORCENTAJE', 30.00,   '2025-11-20', '2025-11-30', 'EXPIRADO');
+INSERT IGNORE INTO descuento (id_descuento, nombre, codigo, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
+    (1, 'Promo Otono 2026',    'OTONO2026', 'PORCENTAJE', 15.00,   '2026-04-01', '2026-06-30', 'ACTIVO'),
+    (2, 'Descuento Fijo 5000', 'FIJO5000',  'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
+    (3, 'Black Friday 2025',   NULL,        'PORCENTAJE', 30.00,   '2025-11-20', '2025-11-30', 'EXPIRADO');
 
 INSERT IGNORE INTO producto (id_producto, id_marca, id_categoria, nombre, descripcion, estado, precio_base) VALUES
     (1, 2, 1, 'Bota Trekking Vectiv',  'Bota de caña media, impermeable, suela Vibram.',        'ACTIVO',  85000.00),
@@ -48,7 +48,7 @@ INSERT IGNORE INTO variante_producto (id_variante, id_producto, color, talla, ma
     (11, 7, 'Negro',    'U',  'Aluminio / ABS',      120.00,  0,  18500.00, 'VERANO');
 
 INSERT IGNORE INTO carrito (id_carrito, id_usuario, id_descuento, estado, monto_total, fecha_ultima_modificacion) VALUES
-    (1, 2, 1,    'ACTIVO', 157000.00, NOW()),
+    (1, 2, 1,    'ACTIVO', 175100.00, NOW()),
     (2, 3, NULL, 'VACIO',       0.00, NOW());
 
 INSERT IGNORE INTO item_carrito (id_item_carrito, id_carrito, id_variante, cantidad, precio_unitario) VALUES

@@ -2,6 +2,7 @@ package com.trekking.ecommerce.controller;
 
 import com.trekking.ecommerce.dto.ProductoRequest;
 import com.trekking.ecommerce.dto.ProductoResponse;
+import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Producto;
 import com.trekking.ecommerce.model.enums.EstadoProducto;
 import com.trekking.ecommerce.service.ProductoService;
@@ -10,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,7 +35,11 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductoResponse> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(toResponse(productoService.findById(id)));
+        Producto p = productoService.findById(id);
+        if (p.getEstado() != EstadoProducto.ACTIVO) {
+            throw new ResourceNotFoundException("Producto", id);
+        }
+        return ResponseEntity.ok(toResponse(p));
     }
 
     @GetMapping("/categoria/{categoriaId}")
@@ -51,6 +55,7 @@ public class ProductoController {
     }
 
     @GetMapping("/estado/{estado}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductoResponse>> findByEstado(@PathVariable EstadoProducto estado) {
         return ResponseEntity.ok(productoService.findByEstado(estado).stream()
                 .map(this::toResponse).toList());

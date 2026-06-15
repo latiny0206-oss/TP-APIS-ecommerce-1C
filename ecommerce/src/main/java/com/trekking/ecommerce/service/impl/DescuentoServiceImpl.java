@@ -34,7 +34,7 @@ public class DescuentoServiceImpl implements DescuentoService {
     @Override
     @Transactional(readOnly = true)
     public List<Descuento> findActivos() {
-        return descuentoRepository.findByEstado(EstadoDescuento.ACTIVO);
+        return descuentoRepository.findActivosVigentes(LocalDate.now());
     }
 
     @Override
@@ -42,6 +42,13 @@ public class DescuentoServiceImpl implements DescuentoService {
     public Descuento findById(Long id) {
         return descuentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Descuento", id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Descuento findByCodigo(String codigo) {
+        return descuentoRepository.findByCodigoIgnoreCase(codigo)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe un cupón con código: " + codigo));
     }
 
     @Override
@@ -53,6 +60,7 @@ public class DescuentoServiceImpl implements DescuentoService {
         validarReglas(request);
         Descuento descuento = Descuento.builder()
                 .nombre(request.getNombre())
+                .codigo(request.getCodigo())
                 .tipo(request.getTipo())
                 .valor(request.getValor())
                 .fechaInicio(request.getFechaInicio())
@@ -71,6 +79,7 @@ public class DescuentoServiceImpl implements DescuentoService {
         validarReglas(request);
         Descuento actual = findById(id);
         actual.setNombre(request.getNombre());
+        actual.setCodigo(request.getCodigo());
         actual.setTipo(request.getTipo());
         actual.setValor(request.getValor());
         actual.setFechaInicio(request.getFechaInicio());

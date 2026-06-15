@@ -46,6 +46,10 @@ public class Descuento {
     @Column(nullable = false, length = 100)
     private String nombre;
 
+    @Size(max = 50)
+    @Column(length = 50, unique = true)
+    private String codigo;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

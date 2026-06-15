@@ -26,21 +26,21 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findAll() {
-        return productoRepository.findAll();
+        return productoRepository.findByEstado(EstadoProducto.ACTIVO);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByCategoria(Long categoriaId) {
         categoriaService.findById(categoriaId);
-        return productoRepository.findByCategoriaId(categoriaId);
+        return productoRepository.findByEstadoAndCategoriaId(EstadoProducto.ACTIVO, categoriaId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByMarca(Long marcaId) {
         marcaService.findById(marcaId);
-        return productoRepository.findByMarcaId(marcaId);
+        return productoRepository.findByEstadoAndMarcaId(EstadoProducto.ACTIVO, marcaId);
     }
 
     @Override

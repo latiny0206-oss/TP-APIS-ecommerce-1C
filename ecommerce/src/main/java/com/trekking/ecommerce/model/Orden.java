@@ -67,6 +67,27 @@ public class Orden {
     @Column(nullable = false, length = 20)
     private EstadoOrden estado;
 
+    @Column(name = "nombre_destinatario", length = 100)
+    private String nombreDestinatario;
+
+    @Column(name = "direccion", length = 250)
+    private String direccion;
+
+    @Column(name = "ciudad", length = 100)
+    private String ciudad;
+
+    @Column(name = "provincia", length = 100)
+    private String provincia;
+
+    @Column(name = "codigo_postal", length = 20)
+    private String codigoPostal;
+
+    @Column(name = "telefono", length = 30)
+    private String telefono;
+
+    @Column(name = "metodo_pago", length = 50)
+    private String metodoPago;
+
     @JsonIgnore
     @OneToMany(mappedBy = "orden")
     private List<ItemOrden> items;

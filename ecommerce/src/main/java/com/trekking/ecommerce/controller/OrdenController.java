@@ -60,15 +60,15 @@ public class OrdenController extends AuthenticatedController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        validarPropietario(ordenService.findById(id).getUsuario().getId());
         ordenService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/confirmar")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrdenResponse> confirmar(@PathVariable Long id) {
-        validarPropietario(ordenService.findById(id).getUsuario().getId());
         return ResponseEntity.ok(toResponse(ordenService.confirmar(id)));
     }
 
@@ -117,8 +117,6 @@ public class OrdenController extends AuthenticatedController {
                 .build();
     }
 
-    // ─── Mapeo a DTOs ────────────────────────────────────────────────────────
-
     private OrdenResponse toResponse(Orden o) {
         return toResponse(o, ordenService.obtenerItems(o.getId()));
     }
@@ -133,6 +131,13 @@ public class OrdenController extends AuthenticatedController {
                 .montoFinal(o.getMontoFinal())
                 .estado(o.getEstado())
                 .items(items.stream().map(this::toItemResponse).toList())
+                .nombreDestinatario(o.getNombreDestinatario())
+                .direccion(o.getDireccion())
+                .ciudad(o.getCiudad())
+                .provincia(o.getProvincia())
+                .codigoPostal(o.getCodigoPostal())
+                .telefono(o.getTelefono())
+                .metodoPago(o.getMetodoPago())
                 .build();
     }
 
