@@ -86,8 +86,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional
     public void delete(Long id) {
-        findById(id);
-        productoRepository.deleteById(id);
+        Producto producto = findById(id);
+        producto.setEstado(EstadoProducto.ELIMINADO);
+        productoRepository.save(producto);
     }
 
     @Override
