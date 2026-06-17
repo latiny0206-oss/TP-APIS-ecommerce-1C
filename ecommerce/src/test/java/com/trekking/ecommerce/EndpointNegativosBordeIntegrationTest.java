@@ -134,12 +134,12 @@ class EndpointNegativosBordeIntegrationTest {
         Long ordenId = checkout(cliente.token(), carritoId);
 
         mockMvc.perform(post("/api/ordenes/{id}/confirmar", ordenId)
-                        .header("Authorization", "Bearer " + cliente.token()))
+                        .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("CONFIRMADA"));
 
         mockMvc.perform(post("/api/ordenes/{id}/confirmar", ordenId)
-                        .header("Authorization", "Bearer " + cliente.token()))
+                        .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", containsString("Solo se puede confirmar")));
     }

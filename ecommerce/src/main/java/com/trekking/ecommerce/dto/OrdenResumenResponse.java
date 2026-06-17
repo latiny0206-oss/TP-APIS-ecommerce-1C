@@ -11,6 +11,9 @@ import lombok.Value;
 public class OrdenResumenResponse {
     Long id;
     Long usuarioId;
+    String nombreDestinatario;
+    String usuarioNombre;
+    String usuarioUsername;
     LocalDateTime fechaCreacion;
     BigDecimal montoFinal;
     EstadoOrden estado;

@@ -273,15 +273,41 @@ public class CarritoServiceImpl implements CarritoService {
                 .montoFinal(total)
                 .estado(EstadoOrden.PENDIENTE);
 
-        if (checkoutRequest != null) {
-            builder.nombreDestinatario(checkoutRequest.getNombreDestinatario())
-                   .direccion(checkoutRequest.getDireccion())
-                   .ciudad(checkoutRequest.getCiudad())
-                   .provincia(checkoutRequest.getProvincia())
-                   .codigoPostal(checkoutRequest.getCodigoPostal())
-                   .telefono(checkoutRequest.getTelefono())
-                   .metodoPago(checkoutRequest.getMetodoPago());
-        }
+        String nombreDest = (checkoutRequest != null && checkoutRequest.getNombreDestinatario() != null && !checkoutRequest.getNombreDestinatario().isBlank())
+                ? checkoutRequest.getNombreDestinatario()
+                : (carrito.getUsuario() != null && carrito.getUsuario().getNombre() != null ? (carrito.getUsuario().getNombre() + " " + carrito.getUsuario().getApellido()) : "Usuario Test");
+
+        String dir = (checkoutRequest != null && checkoutRequest.getDireccion() != null && !checkoutRequest.getDireccion().isBlank())
+                ? checkoutRequest.getDireccion()
+                : "Av. Bustillo Km 4.5";
+
+        String ciudad = (checkoutRequest != null && checkoutRequest.getCiudad() != null && !checkoutRequest.getCiudad().isBlank())
+                ? checkoutRequest.getCiudad()
+                : "Bariloche";
+
+        String prov = (checkoutRequest != null && checkoutRequest.getProvincia() != null && !checkoutRequest.getProvincia().isBlank())
+                ? checkoutRequest.getProvincia()
+                : "Río Negro";
+
+        String cp = (checkoutRequest != null && checkoutRequest.getCodigoPostal() != null && !checkoutRequest.getCodigoPostal().isBlank())
+                ? checkoutRequest.getCodigoPostal()
+                : "8400";
+
+        String tel = (checkoutRequest != null && checkoutRequest.getTelefono() != null && !checkoutRequest.getTelefono().isBlank())
+                ? checkoutRequest.getTelefono()
+                : "+54 294 448-0000";
+
+        String metPago = (checkoutRequest != null && checkoutRequest.getMetodoPago() != null && !checkoutRequest.getMetodoPago().isBlank())
+                ? checkoutRequest.getMetodoPago()
+                : "TRANSFERENCIA";
+
+        builder.nombreDestinatario(nombreDest)
+               .direccion(dir)
+               .ciudad(ciudad)
+               .provincia(prov)
+               .codigoPostal(cp)
+               .telefono(tel)
+               .metodoPago(metPago);
 
         Orden ordenGuardada = ordenRepository.save(builder.build());
 

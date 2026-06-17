@@ -41,7 +41,7 @@ class ProductoServiceImplTest {
     @Test
     void findAll_retornaListaDeProductos() {
         Producto p = productoBase();
-        when(productoRepository.findAll()).thenReturn(List.of(p));
+        when(productoRepository.findByEstado(EstadoProducto.ACTIVO)).thenReturn(List.of(p));
 
         List<Producto> result = productoService.findAll();
 
@@ -105,12 +105,15 @@ class ProductoServiceImplTest {
     }
 
     @Test
-    void delete_productoExistente_invocaDeleteById() {
-        when(productoRepository.findById(1L)).thenReturn(Optional.of(productoBase()));
+    void delete_productoExistente_invocaSaveConEstadoEliminado() {
+        Producto p = productoBase();
+        when(productoRepository.findById(1L)).thenReturn(Optional.of(p));
+        when(productoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         productoService.delete(1L);
 
-        verify(productoRepository).deleteById(1L);
+        assertThat(p.getEstado()).isEqualTo(EstadoProducto.ELIMINADO);
+        verify(productoRepository).save(p);
     }
 
     @Test
@@ -161,7 +164,7 @@ class ProductoServiceImplTest {
     @Test
     void findByCategoria_delegaEnRepositorio() {
         when(categoriaService.findById(2L)).thenReturn(Categoria.builder().id(2L).build());
-        when(productoRepository.findByCategoriaId(2L)).thenReturn(List.of(productoBase()));
+        when(productoRepository.findByEstadoAndCategoriaId(EstadoProducto.ACTIVO, 2L)).thenReturn(List.of(productoBase()));
 
         List<Producto> result = productoService.findByCategoria(2L);
 
@@ -171,7 +174,7 @@ class ProductoServiceImplTest {
     @Test
     void findByMarca_delegaEnRepositorio() {
         when(marcaService.findById(1L)).thenReturn(Marca.builder().id(1L).build());
-        when(productoRepository.findByMarcaId(1L)).thenReturn(List.of(productoBase()));
+        when(productoRepository.findByEstadoAndMarcaId(EstadoProducto.ACTIVO, 1L)).thenReturn(List.of(productoBase()));
 
         List<Producto> result = productoService.findByMarca(1L);
 

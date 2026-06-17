@@ -145,7 +145,7 @@ class EndpointFlujosIntegrationTest {
         Long ordenId = leerJson(checkoutResult).get("id").asLong();
 
         mockMvc.perform(post("/api/ordenes/{id}/confirmar", ordenId)
-                        .header("Authorization", "Bearer " + cliente.token()))
+                        .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("CONFIRMADA"));
 
