@@ -194,7 +194,7 @@ class CarritoServiceImplTest {
         when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(carrito));
         when(itemCarritoRepository.findByCarritoId(carritoId)).thenReturn(List.of());
 
-        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId))
+        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId, null))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("vacío");
     }
@@ -231,7 +231,7 @@ class CarritoServiceImplTest {
         when(varianteProductoService.descontarStock(varianteId, 2))
                 .thenThrow(new BusinessRuleException("Stock insuficiente para variante id " + varianteId));
 
-        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId))
+        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId, null))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("Stock insuficiente");
     }
@@ -279,7 +279,7 @@ class CarritoServiceImplTest {
         when(ordenRepository.save(any())).thenReturn(ordenGuardada);
         when(carritoRepository.save(any())).thenReturn(carrito);
 
-        Orden resultado = carritoService.realizarCompra(carritoId);
+        Orden resultado = carritoService.realizarCompra(carritoId, null);
 
         assertThat(resultado.getEstado()).isEqualTo(EstadoOrden.PENDIENTE);
         assertThat(resultado.getMontoFinal()).isEqualByComparingTo(new BigDecimal("600.00"));
