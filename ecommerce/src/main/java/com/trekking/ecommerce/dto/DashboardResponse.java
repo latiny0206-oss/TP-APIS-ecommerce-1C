@@ -14,4 +14,12 @@ public class DashboardResponse {
     long clientesRegistrados;
     BigDecimal ventasTotales;
     List<OrdenResumenResponse> ordenesRecientes;
+
+    // KPIs semanales (ventas confirmadas de esta semana vs semana anterior)
+    BigDecimal ventasSemanaActual;
+    BigDecimal ventasSemanaAnterior;
+    Double crecimientoVentasPct;
+
+    // Variantes con bajo stock
+    List<VarianteBajoStockResponse> variantesBajoStock;
 }
