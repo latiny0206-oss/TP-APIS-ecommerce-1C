@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../TP-APIS-ecommerce-front"
+		},
+		{
+			"path": "../TP-APIS-ecommerce-test-qa"
+		}
+	]
+}
