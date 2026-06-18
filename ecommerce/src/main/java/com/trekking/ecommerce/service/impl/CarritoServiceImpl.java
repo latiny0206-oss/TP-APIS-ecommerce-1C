@@ -301,13 +301,16 @@ public class CarritoServiceImpl implements CarritoService {
                 ? checkoutRequest.getMetodoPago()
                 : "TRANSFERENCIA";
 
+        EstadoOrden estadoInicial = metPago.startsWith("TARJETA") ? EstadoOrden.CONFIRMADA : EstadoOrden.PENDIENTE;
+
         builder.nombreDestinatario(nombreDest)
                .direccion(dir)
                .ciudad(ciudad)
                .provincia(prov)
                .codigoPostal(cp)
                .telefono(tel)
-               .metodoPago(metPago);
+               .metodoPago(metPago)
+               .estado(estadoInicial);
 
         Orden ordenGuardada = ordenRepository.save(builder.build());
 

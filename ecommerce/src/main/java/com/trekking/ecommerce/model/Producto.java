@@ -72,6 +72,9 @@ public class Producto {
     @Column(name = "precio_base", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioBase;
 
+    @Column(name = "descuento_pct", precision = 5, scale = 2, columnDefinition = "DECIMAL(5,2) DEFAULT 0")
+    private BigDecimal descuentoPct;
+
     @JsonIgnore
     @OneToMany(mappedBy = "producto")
     private List<VarianteProducto> variantes;

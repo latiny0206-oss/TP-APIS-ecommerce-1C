@@ -17,4 +17,5 @@ public class ProductoResponse {
     String descripcion;
     EstadoProducto estado;
     BigDecimal precioBase;
+    BigDecimal descuentoPct;
 }

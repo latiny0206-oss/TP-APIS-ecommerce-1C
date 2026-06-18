@@ -48,14 +48,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining(", "));
+                .map(e -> mapFieldError(e.getField(), e.getDefaultMessage()))
+                .collect(Collectors.joining(". "));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Validation Error")
                 .message(message)
                 .build());
+    }
+
+    private String mapFieldError(String field, String defaultMessage) {
+        return switch (field) {
+            case "username"  -> "El nombre de usuario es obligatorio";
+            case "password"  -> "La contraseña es obligatoria";
+            case "email"     -> "El email es inválido o está vacío";
+            case "nombre"    -> "El nombre es obligatorio";
+            case "apellido"  -> "El apellido es obligatorio";
+            default -> "El campo '" + field + "' es inválido";
+        };
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

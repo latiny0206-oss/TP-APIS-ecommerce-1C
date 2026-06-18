@@ -2,6 +2,7 @@ package com.trekking.ecommerce.controller;
 
 import com.trekking.ecommerce.dto.UsuarioRequest;
 import com.trekking.ecommerce.dto.UsuarioResponse;
+import com.trekking.ecommerce.dto.UsuarioUpdateRequest;
 import com.trekking.ecommerce.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -42,7 +43,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> update(@PathVariable Long id, @Valid @RequestBody UsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse> update(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateRequest request) {
         return ResponseEntity.ok(usuarioService.update(id, request));
     }
 

@@ -3,6 +3,7 @@ package com.trekking.ecommerce.controller;
 import com.trekking.ecommerce.dto.MarcaRequest;
 import com.trekking.ecommerce.dto.MarcaResponse;
 import com.trekking.ecommerce.model.Marca;
+import com.trekking.ecommerce.repository.ProductoRepository;
 import com.trekking.ecommerce.service.MarcaService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MarcaController {
 
     private final MarcaService marcaService;
+    private final ProductoRepository productoRepository;
 
     @GetMapping
     public ResponseEntity<List<MarcaResponse>> findAll() {
@@ -63,6 +65,7 @@ public class MarcaController {
                 .id(m.getId())
                 .nombre(m.getNombre())
                 .descripcion(m.getDescripcion())
+                .cantidadProductos(productoRepository.countByMarcaId(m.getId()))
                 .build();
     }
 }

@@ -66,6 +66,7 @@ public class ProductoServiceImpl implements ProductoService {
                 .descripcion(request.getDescripcion())
                 .estado(request.getEstado())
                 .precioBase(request.getPrecioBase())
+                .descuentoPct(request.getDescuentoPct())
                 .build();
         return productoRepository.save(producto);
     }
@@ -80,6 +81,7 @@ public class ProductoServiceImpl implements ProductoService {
         actual.setDescripcion(request.getDescripcion());
         actual.setEstado(request.getEstado());
         actual.setPrecioBase(request.getPrecioBase());
+        actual.setDescuentoPct(request.getDescuentoPct());
         return productoRepository.save(actual);
     }
 

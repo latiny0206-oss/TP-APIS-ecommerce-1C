@@ -97,6 +97,7 @@ public class ProductoController {
                 .descripcion(p.getDescripcion())
                 .estado(p.getEstado())
                 .precioBase(p.getPrecioBase())
+                .descuentoPct(p.getDescuentoPct())
                 .build();
     }
 }

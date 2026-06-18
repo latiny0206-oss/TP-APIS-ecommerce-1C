@@ -43,7 +43,8 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String token = jwtUtil.generateToken(userDetails);
         String rol = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        Usuario usuario = usuarioService.findByUsername(request.getUsername());
+        // userDetails.getUsername() es siempre el username real (no el email que pudo haber ingresado)
+        Usuario usuario = usuarioService.findByUsername(userDetails.getUsername());
         return ResponseEntity.ok(AuthResponse.builder()
                 .id(usuario.getId())
                 .token(token)

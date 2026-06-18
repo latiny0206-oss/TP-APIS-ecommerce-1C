@@ -9,4 +9,5 @@ public class CategoriaResponse {
     Long id;
     String nombre;
     String descripcion;
+    Long cantidadProductos;
 }

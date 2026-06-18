@@ -9,4 +9,5 @@ public class MarcaResponse {
     Long id;
     String nombre;
     String descripcion;
+    Long cantidadProductos;
 }

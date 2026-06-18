@@ -2,6 +2,7 @@ package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.UsuarioRequest;
 import com.trekking.ecommerce.dto.UsuarioResponse;
+import com.trekking.ecommerce.dto.UsuarioUpdateRequest;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Usuario;
 import com.trekking.ecommerce.repository.UsuarioRepository;
@@ -48,7 +49,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioResponse update(Long id, UsuarioRequest request) {
+    public UsuarioResponse update(Long id, UsuarioUpdateRequest request) {
         Usuario usuario = findEntityById(id);
         usuario.setUsername(request.getUsername());
         usuario.setEmail(request.getEmail());

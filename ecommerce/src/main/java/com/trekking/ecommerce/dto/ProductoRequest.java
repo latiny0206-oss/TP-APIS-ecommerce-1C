@@ -27,4 +27,7 @@ public class ProductoRequest {
     @NotNull
     @DecimalMin("0.0")
     private BigDecimal precioBase;
+
+    @DecimalMin("0.0")
+    private BigDecimal descuentoPct;
 }

@@ -4,6 +4,7 @@ import com.trekking.ecommerce.dto.VarianteProductoRequest;
 import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.VarianteProducto;
+import com.trekking.ecommerce.repository.FotoRepository;
 import com.trekking.ecommerce.repository.ItemCarritoRepository;
 import com.trekking.ecommerce.repository.ItemOrdenRepository;
 import com.trekking.ecommerce.repository.VarianteProductoRepository;
@@ -23,6 +24,7 @@ public class VarianteProductoServiceImpl implements VarianteProductoService {
     private final ProductoService productoService;
     private final ItemCarritoRepository itemCarritoRepository;
     private final ItemOrdenRepository itemOrdenRepository;
+    private final FotoRepository fotoRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -80,6 +82,8 @@ public class VarianteProductoServiceImpl implements VarianteProductoService {
             throw new BusinessRuleException(
                     "No se puede eliminar la variante id " + id + " porque tiene órdenes asociadas");
         }
+        // Eliminar fotos asociadas antes de eliminar la variante (FK constraint)
+        fotoRepository.deleteAll(fotoRepository.findByVarianteId(id));
         varianteProductoRepository.deleteById(id);
     }
 
