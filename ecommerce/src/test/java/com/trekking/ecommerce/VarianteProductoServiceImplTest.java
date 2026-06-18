@@ -7,6 +7,7 @@ import com.trekking.ecommerce.model.Producto;
 import com.trekking.ecommerce.model.VarianteProducto;
 import com.trekking.ecommerce.model.enums.Estacion;
 import com.trekking.ecommerce.model.enums.EstadoProducto;
+import com.trekking.ecommerce.repository.FotoRepository;
 import com.trekking.ecommerce.repository.ItemCarritoRepository;
 import com.trekking.ecommerce.repository.ItemOrdenRepository;
 import com.trekking.ecommerce.repository.VarianteProductoRepository;
@@ -34,6 +35,7 @@ class VarianteProductoServiceImplTest {
     @Mock private ProductoService productoService;
     @Mock private ItemCarritoRepository itemCarritoRepository;
     @Mock private ItemOrdenRepository itemOrdenRepository;
+    @Mock private FotoRepository fotoRepository;
 
     @InjectMocks
     private VarianteProductoServiceImpl varianteService;
@@ -105,6 +107,7 @@ class VarianteProductoServiceImplTest {
         when(varianteProductoRepository.findById(1L)).thenReturn(Optional.of(varianteBase(5)));
         when(itemCarritoRepository.existsByVarianteId(1L)).thenReturn(false);
         when(itemOrdenRepository.existsByVarianteId(1L)).thenReturn(false);
+        when(fotoRepository.findByVarianteId(1L)).thenReturn(List.of());
 
         varianteService.delete(1L);
 

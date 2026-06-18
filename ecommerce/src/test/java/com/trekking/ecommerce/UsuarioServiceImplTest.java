@@ -1,6 +1,7 @@
 package com.trekking.ecommerce;
 
 import com.trekking.ecommerce.dto.UsuarioRequest;
+import com.trekking.ecommerce.dto.UsuarioUpdateRequest;
 import com.trekking.ecommerce.dto.UsuarioResponse;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Usuario;
@@ -80,7 +81,7 @@ class UsuarioServiceImplTest {
     void update_sinPassword_noRecodifica() {
         Usuario existente = usuarioBase();
         existente.setPassword("hashed_original");
-        UsuarioRequest req = requestBase();
+        UsuarioUpdateRequest req = updateRequestBase();
         req.setPassword(null);
 
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(existente));
@@ -95,7 +96,7 @@ class UsuarioServiceImplTest {
     void update_conPassword_recodificaPassword() {
         Usuario existente = usuarioBase();
         existente.setPassword("hashed_original");
-        UsuarioRequest req = requestBase();
+        UsuarioUpdateRequest req = updateRequestBase();
         req.setPassword("NuevoPass1");
 
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(existente));
@@ -167,6 +168,18 @@ class UsuarioServiceImplTest {
 
     private UsuarioRequest requestBase() {
         UsuarioRequest req = new UsuarioRequest();
+        req.setUsername("juan");
+        req.setEmail("juan@mail.com");
+        req.setPassword("Password1");
+        req.setNombre("Juan");
+        req.setApellido("Perez");
+        req.setRol(RolUsuario.CLIENTE);
+        req.setEstado(EstadoUsuario.ACTIVO);
+        return req;
+    }
+
+    private UsuarioUpdateRequest updateRequestBase() {
+        UsuarioUpdateRequest req = new UsuarioUpdateRequest();
         req.setUsername("juan");
         req.setEmail("juan@mail.com");
         req.setPassword("Password1");
