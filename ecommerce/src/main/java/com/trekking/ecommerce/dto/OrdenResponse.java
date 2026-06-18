@@ -25,4 +25,7 @@ public class OrdenResponse {
     String codigoPostal;
     String telefono;
     String metodoPago;
+    String cuponCodigo;
+    String cuponTipo;
+    BigDecimal cuponValor;
 }

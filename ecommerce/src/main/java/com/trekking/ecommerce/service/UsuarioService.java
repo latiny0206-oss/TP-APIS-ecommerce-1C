@@ -14,5 +14,8 @@ public interface UsuarioService {
     void delete(Long id);
     Usuario findByUsername(String username);
     Usuario findEntityById(Long id);
+    Usuario findByEmail(String email);
+    void createPasswordResetTokenForUser(Usuario user, String token);
+    void resetPassword(String token, String newPassword);
 }
 

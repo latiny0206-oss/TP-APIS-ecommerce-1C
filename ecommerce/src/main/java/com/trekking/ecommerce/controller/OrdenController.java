@@ -138,6 +138,9 @@ public class OrdenController extends AuthenticatedController {
                 .codigoPostal(o.getCodigoPostal())
                 .telefono(o.getTelefono())
                 .metodoPago(o.getMetodoPago())
+                .cuponCodigo(o.getDescuento() != null ? o.getDescuento().getCodigo() : null)
+                .cuponTipo(o.getDescuento() != null ? o.getDescuento().getTipo().name() : null)
+                .cuponValor(o.getDescuento() != null ? o.getDescuento().getValor() : null)
                 .build();
     }
 

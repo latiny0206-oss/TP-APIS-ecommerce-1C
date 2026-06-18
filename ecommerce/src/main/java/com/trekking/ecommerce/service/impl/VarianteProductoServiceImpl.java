@@ -109,8 +109,7 @@ public class VarianteProductoServiceImpl implements VarianteProductoService {
         VarianteProducto variante = findById(id);
         int stockActual = variante.getStock() != null ? variante.getStock() : 0;
         if (stockActual < cantidad) {
-            throw new BusinessRuleException("Stock insuficiente para variante id " + id
-                    + ". Stock actual: " + stockActual + ", solicitado: " + cantidad);
+            throw new BusinessRuleException("Sin stock disponible para esta combinación");
         }
         variante.setStock(stockActual - cantidad);
         return varianteProductoRepository.save(variante);

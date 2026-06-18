@@ -21,6 +21,7 @@ import com.trekking.ecommerce.repository.ItemCarritoRepository;
 import com.trekking.ecommerce.repository.ItemOrdenRepository;
 import com.trekking.ecommerce.repository.OrdenRepository;
 import com.trekking.ecommerce.service.CarritoService;
+import com.trekking.ecommerce.service.EmailService;
 import com.trekking.ecommerce.service.UsuarioService;
 import com.trekking.ecommerce.service.VarianteProductoService;
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ public class CarritoServiceImpl implements CarritoService {
     private final OrdenRepository ordenRepository;
     private final ItemOrdenRepository itemOrdenRepository;
     private final UsuarioService usuarioService;
+    private final EmailService emailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -138,8 +140,7 @@ public class CarritoServiceImpl implements CarritoService {
         int nuevaCantidad = item.getCantidad() + cantidad;
         int stockDisponible = variante.getStock() != null ? variante.getStock() : 0;
         if (stockDisponible < nuevaCantidad) {
-            throw new BusinessRuleException("Stock insuficiente para variante id " + idVariante
-                    + ". Stock disponible: " + stockDisponible + ", solicitado en carrito: " + nuevaCantidad);
+            throw new BusinessRuleException("Sin stock disponible para esta combinación");
         }
 
         item.setCantidad(nuevaCantidad);
@@ -182,8 +183,7 @@ public class CarritoServiceImpl implements CarritoService {
         VarianteProducto variante = item.getVariante();
         int stockDisponible = variante.getStock() != null ? variante.getStock() : 0;
         if (stockDisponible < cantidad) {
-            throw new BusinessRuleException("Stock insuficiente para variante id " + variante.getId()
-                    + ". Stock disponible: " + stockDisponible + ", solicitado: " + cantidad);
+            throw new BusinessRuleException("Sin stock disponible para esta combinación");
         }
         item.setCantidad(cantidad);
         ItemCarrito saved = itemCarritoRepository.save(item);
@@ -333,6 +333,95 @@ public class CarritoServiceImpl implements CarritoService {
         carritoRepository.save(carrito);
         itemCarritoRepository.deleteAll(items);
 
+        // Enviar email de confirmación de compra
+        try {
+            StringBuilder itemsTableRows = new StringBuilder();
+            for (ItemOrden item : itemsOrden) {
+                String nombreProducto = item.getVariante().getProducto().getNombre();
+                String color = item.getVariante().getColor();
+                String talla = item.getVariante().getTalla();
+                Integer cantidad = item.getCantidad();
+                BigDecimal precioUnitario = item.getPrecioAlMomento();
+                BigDecimal subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+
+                itemsTableRows.append(String.format(
+                    "<tr>" +
+                    "  <td style=\"padding: 10px; border-bottom: 1px solid #edf2f7; color: #4a5568;\">%s (Color: %s, Talle: %s)</td>" +
+                    "  <td style=\"padding: 10px; border-bottom: 1px solid #edf2f7; text-align: center; color: #4a5568;\">%d</td>" +
+                    "  <td style=\"padding: 10px; border-bottom: 1px solid #edf2f7; text-align: right; color: #4a5568;\">$%,.2f</td>" +
+                    "  <td style=\"padding: 10px; border-bottom: 1px solid #edf2f7; text-align: right; font-weight: bold; color: #2d3748;\">$%,.2f</td>" +
+                    "</tr>",
+                    nombreProducto, color, talla, cantidad, precioUnitario.doubleValue(), subtotal.doubleValue()
+                ));
+            }
+
+            String descuentoInfo = "";
+            if (ordenGuardada.getDescuento() != null) {
+                descuentoInfo = String.format(
+                    "<p style=\"margin: 5px 0; font-size: 14px; color: #e53e3e;\">" +
+                    "  <strong>Cupón Aplicado:</strong> %s" +
+                    "</p>",
+                    ordenGuardada.getDescuento().getCodigo()
+                );
+            }
+
+            String htmlBody = "<div style=\"font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;\">"
+                    + "  <div style=\"text-align: center; padding-bottom: 20px; border-bottom: 2px solid #edf2f7;\">"
+                    + "    <h1 style=\"color: #2d3748; margin: 0; font-size: 24px;\">¡Gracias por tu compra! 🏔️</h1>"
+                    + "    <p style=\"color: #718096; margin: 5px 0 0 0;\">Pedido #" + ordenGuardada.getId() + " - Confirmación de Recepción</p>"
+                    + "  </div>"
+                    + "  "
+                    + "  <div style=\"padding: 20px 0; color: #4a5568; line-height: 1.6;\">"
+                    + "    <p style=\"font-size: 16px;\">Hola <strong>" + ordenGuardada.getNombreDestinatario() + "</strong>,</p>"
+                    + "    <p style=\"font-size: 16px;\">Queremos confirmarte que hemos recibido tu pedido con éxito y ya estamos trabajando en él. A continuación, encontrarás los detalles de tu compra:</p>"
+                    + "    "
+                    + "    <div style=\"background-color: #f7fafc; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #edf2f7;\">"
+                    + "      <h3 style=\"margin-top: 0; color: #2d3748; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;\">Resumen del Pedido</h3>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Método de Pago:</strong> " + ordenGuardada.getMetodoPago() + "</p>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Estado del Pedido:</strong> " + ordenGuardada.getEstado() + "</p>"
+                    + "      " + descuentoInfo
+                    + "    </div>"
+                    + "    "
+                    + "    <div style=\"background-color: #f7fafc; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #edf2f7;\">"
+                    + "      <h3 style=\"margin-top: 0; color: #2d3748; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;\">Datos de Envío / Entrega</h3>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Destinatario:</strong> " + ordenGuardada.getNombreDestinatario() + "</p>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Dirección:</strong> " + ordenGuardada.getDireccion() + "</p>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Ciudad / Provincia:</strong> " + ordenGuardada.getCiudad() + ", " + ordenGuardada.getProvincia() + " (CP: " + ordenGuardada.getCodigoPostal() + ")</p>"
+                    + "      <p style=\"margin: 5px 0;\"><strong>Teléfono:</strong> " + ordenGuardada.getTelefono() + "</p>"
+                    + "    </div>"
+                    + "    "
+                    + "    <h3 style=\"color: #2d3748; font-size: 18px; margin-top: 25px; margin-bottom: 10px;\">Productos</h3>"
+                    + "    <table style=\"width: 100%; border-collapse: collapse; margin-bottom: 20px;\">"
+                    + "      <thead>"
+                    + "        <tr style=\"background-color: #f7fafc;\">"
+                    + "          <th style=\"padding: 10px; border-bottom: 2px solid #edf2f7; text-align: left; color: #718096; font-size: 13px;\">Producto</th>"
+                    + "          <th style=\"padding: 10px; border-bottom: 2px solid #edf2f7; text-align: center; color: #718096; font-size: 13px;\">Cant.</th>"
+                    + "          <th style=\"padding: 10px; border-bottom: 2px solid #edf2f7; text-align: right; color: #718096; font-size: 13px;\">Unitario</th>"
+                    + "          <th style=\"padding: 10px; border-bottom: 2px solid #edf2f7; text-align: right; color: #718096; font-size: 13px;\">Total</th>"
+                    + "        </tr>"
+                    + "      </thead>"
+                    + "      <tbody>"
+                    + "        " + itemsTableRows.toString()
+                    + "      </tbody>"
+                    + "    </table>"
+                    + "    "
+                    + "    <div style=\"text-align: right; margin-top: 20px; padding-top: 15px; border-top: 2px solid #edf2f7;\">"
+                    + "      <span style=\"font-size: 18px; color: #4a5568;\">Total Final:</span>"
+                    + "      <span style=\"font-size: 24px; font-weight: bold; color: #2b6cb0; margin-left: 10px;\">$" + String.format("%,.2f", ordenGuardada.getMontoFinal().doubleValue()) + "</span>"
+                    + "    </div>"
+                    + "  </div>"
+                    + "  "
+                    + "  <div style=\"text-align: center; padding-top: 20px; border-top: 1px solid #edf2f7; font-size: 12px; color: #a0aec0; margin-top: 30px;\">"
+                    + "    <p style=\"margin: 0;\">Gracias por elegir a Cumbre. ¡Esperamos verte pronto en la montaña! 🏔️</p>"
+                    + "    <p style=\"margin: 5px 0 0 0;\">© 2026 Cumbre E-commerce. Todos los derechos reservados.</p>"
+                    + "  </div>"
+                    + "</div>";
+
+            emailService.sendEmail(ordenGuardada.getUsuario().getEmail(), "Confirmación de Compra - Pedido #" + ordenGuardada.getId() + " 🛒", htmlBody);
+        } catch (Exception e) {
+            // Se loguea el error pero no se interrumpe la respuesta
+        }
+
         return ordenGuardada;
     }
 
@@ -346,7 +435,7 @@ public class CarritoServiceImpl implements CarritoService {
         Descuento descuento = descuentoRepository.findByCodigoIgnoreCase(codigo)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe un cupón con código: " + codigo));
         if (!estaVigente(descuento)) {
-            throw new BusinessRuleException("El cupón '" + codigo + "' no está vigente");
+            throw new BusinessRuleException("Este cupón está desactivado o expirado");
         }
         carrito.setDescuento(descuento);
         carrito.setMontoTotal(calcularTotal(idCarrito));

@@ -5,8 +5,11 @@ import com.trekking.ecommerce.dto.UsuarioResponse;
 import com.trekking.ecommerce.dto.UsuarioUpdateRequest;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Usuario;
+import com.trekking.ecommerce.model.PasswordResetToken;
+import com.trekking.ecommerce.repository.PasswordResetTokenRepository;
 import com.trekking.ecommerce.repository.UsuarioRepository;
 import com.trekking.ecommerce.service.UsuarioService;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +22,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -80,6 +84,42 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario findEntityById(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario", id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario con email '" + email + "' no encontrado"));
+    }
+
+    @Override
+    @Transactional
+    public void createPasswordResetTokenForUser(Usuario user, String token) {
+        passwordResetTokenRepository.deleteByUsuario(user); // Invalidamos tokens anteriores
+        PasswordResetToken myToken = PasswordResetToken.builder()
+                .token(token)
+                .usuario(user)
+                .expiryDate(LocalDateTime.now().plusHours(1))
+                .build();
+        passwordResetTokenRepository.save(myToken);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
+        
+        if (resetToken.isExpired()) {
+            passwordResetTokenRepository.delete(resetToken);
+            throw new IllegalArgumentException("Token expirado");
+        }
+        
+        Usuario user = resetToken.getUsuario();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(user);
+        passwordResetTokenRepository.deleteByUsuario(user);
     }
 
     private UsuarioResponse toResponse(Usuario usuario) {
