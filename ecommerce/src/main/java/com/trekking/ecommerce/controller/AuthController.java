@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -98,7 +100,7 @@ public class AuthController {
 
             emailService.sendEmail(usuario.getEmail(), "¡Bienvenido a Cumbre! 🏔️", welcomeHtml);
         } catch (Exception e) {
-            // Se loguea el error pero no se interrumpe la respuesta del registro exitoso
+            log.error("Error enviando email de bienvenida: {}", e.getMessage());
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getUsername());
@@ -129,7 +131,7 @@ public class AuthController {
                     
             emailService.sendEmail(user.getEmail(), "Restablecer contraseña", htmlContent);
         } catch (Exception e) {
-            // Ignoramos si el usuario no existe para no filtrar emails válidos
+            log.warn("Error enviando email de forgot-password (o usuario no existe): {}", e.getMessage());
         }
         
         return ResponseEntity.ok(Map.of("message",

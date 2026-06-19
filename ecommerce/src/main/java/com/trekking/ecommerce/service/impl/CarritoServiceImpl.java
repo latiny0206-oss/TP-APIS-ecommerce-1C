@@ -30,11 +30,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CarritoServiceImpl implements CarritoService {
 
     private final CarritoRepository carritoRepository;
@@ -419,7 +421,7 @@ public class CarritoServiceImpl implements CarritoService {
 
             emailService.sendEmail(ordenGuardada.getUsuario().getEmail(), "Confirmación de Compra - Pedido #" + ordenGuardada.getId() + " 🛒", htmlBody);
         } catch (Exception e) {
-            // Se loguea el error pero no se interrumpe la respuesta
+            log.error("Error enviando email de confirmación de compra: {}", e.getMessage());
         }
 
         return ordenGuardada;
