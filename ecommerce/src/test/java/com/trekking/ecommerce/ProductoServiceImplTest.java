@@ -41,7 +41,7 @@ class ProductoServiceImplTest {
     @Test
     void findAll_retornaListaDeProductos() {
         Producto p = productoBase();
-        when(productoRepository.findByEstado(EstadoProducto.ACTIVO)).thenReturn(List.of(p));
+        when(productoRepository.findByEstadoFetch(EstadoProducto.ACTIVO)).thenReturn(List.of(p));
 
         List<Producto> result = productoService.findAll();
 
@@ -164,7 +164,7 @@ class ProductoServiceImplTest {
     @Test
     void findByCategoria_delegaEnRepositorio() {
         when(categoriaService.findById(2L)).thenReturn(Categoria.builder().id(2L).build());
-        when(productoRepository.findByEstadoAndCategoriaId(EstadoProducto.ACTIVO, 2L)).thenReturn(List.of(productoBase()));
+        when(productoRepository.findByEstadoAndCategoriaIdFetch(EstadoProducto.ACTIVO, 2L)).thenReturn(List.of(productoBase()));
 
         List<Producto> result = productoService.findByCategoria(2L);
 
@@ -174,7 +174,7 @@ class ProductoServiceImplTest {
     @Test
     void findByMarca_delegaEnRepositorio() {
         when(marcaService.findById(1L)).thenReturn(Marca.builder().id(1L).build());
-        when(productoRepository.findByEstadoAndMarcaId(EstadoProducto.ACTIVO, 1L)).thenReturn(List.of(productoBase()));
+        when(productoRepository.findByEstadoAndMarcaIdFetch(EstadoProducto.ACTIVO, 1L)).thenReturn(List.of(productoBase()));
 
         List<Producto> result = productoService.findByMarca(1L);
 
@@ -183,7 +183,7 @@ class ProductoServiceImplTest {
 
     @Test
     void findByEstado_delegaEnRepositorio() {
-        when(productoRepository.findByEstado(EstadoProducto.ACTIVO)).thenReturn(List.of(productoBase()));
+        when(productoRepository.findByEstadoFetch(EstadoProducto.ACTIVO)).thenReturn(List.of(productoBase()));
 
         List<Producto> result = productoService.findByEstado(EstadoProducto.ACTIVO);
 

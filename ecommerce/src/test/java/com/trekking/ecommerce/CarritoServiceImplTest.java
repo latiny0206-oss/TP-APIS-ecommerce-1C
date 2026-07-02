@@ -1,5 +1,6 @@
 package com.trekking.ecommerce;
 
+import com.trekking.ecommerce.dto.CheckoutRequest;
 import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.model.Carrito;
 import com.trekking.ecommerce.model.Descuento;
@@ -231,7 +232,7 @@ class CarritoServiceImplTest {
         when(varianteProductoService.descontarStock(varianteId, 2))
                 .thenThrow(new BusinessRuleException("Stock insuficiente para variante id " + varianteId));
 
-        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId, null))
+        assertThatThrownBy(() -> carritoService.realizarCompra(carritoId, checkoutValido()))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("Stock insuficiente");
     }
@@ -279,7 +280,7 @@ class CarritoServiceImplTest {
         when(ordenRepository.save(any())).thenReturn(ordenGuardada);
         when(carritoRepository.save(any())).thenReturn(carrito);
 
-        Orden resultado = carritoService.realizarCompra(carritoId, null);
+        Orden resultado = carritoService.realizarCompra(carritoId, checkoutValido());
 
         assertThat(resultado.getEstado()).isEqualTo(EstadoOrden.PENDIENTE);
         assertThat(resultado.getMontoFinal()).isEqualByComparingTo(new BigDecimal("600.00"));
@@ -379,5 +380,17 @@ class CarritoServiceImplTest {
         assertThatThrownBy(() -> carritoService.actualizarItem(carritoId, itemId, 2))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("no pertenece al carrito");
+    }
+
+    private CheckoutRequest checkoutValido() {
+        CheckoutRequest r = new CheckoutRequest();
+        r.setNombreDestinatario("Juan Pérez");
+        r.setDireccion("Av. Siempreviva 742");
+        r.setCiudad("Buenos Aires");
+        r.setProvincia("Buenos Aires");
+        r.setCodigoPostal("1414");
+        r.setTelefono("1155556789");
+        r.setMetodoPago("TRANSFERENCIA");
+        return r;
     }
 }

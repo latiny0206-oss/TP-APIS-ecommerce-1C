@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,6 +45,10 @@ public class VarianteProducto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_variante")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @NotNull
     @ManyToOne

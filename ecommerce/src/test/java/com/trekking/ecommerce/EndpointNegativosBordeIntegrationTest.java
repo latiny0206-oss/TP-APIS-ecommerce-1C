@@ -251,11 +251,25 @@ class EndpointNegativosBordeIntegrationTest {
 
     private Long checkout(String token, Long carritoId) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/carritos/{id}/checkout", carritoId)
-                        .header("Authorization", "Bearer " + token))
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(checkoutBody())))
                 .andExpect(status().isOk())
                 .andReturn();
 
         return leerJson(result).get("id").asLong();
+    }
+
+    private Map<String, String> checkoutBody() {
+        Map<String, String> body = new HashMap<>();
+        body.put("nombreDestinatario", "Test User");
+        body.put("direccion", "Av. Test 123");
+        body.put("ciudad", "Buenos Aires");
+        body.put("provincia", "Buenos Aires");
+        body.put("codigoPostal", "1000");
+        body.put("telefono", "1155550000");
+        body.put("metodoPago", "TRANSFERENCIA");
+        return body;
     }
 
     private void actualizarCarrito(String token, Long carritoId, Long descuentoId) throws Exception {

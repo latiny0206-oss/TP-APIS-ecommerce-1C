@@ -75,6 +75,9 @@ public class Producto {
     @Column(name = "descuento_pct", precision = 5, scale = 2, columnDefinition = "DECIMAL(5,2) DEFAULT 0")
     private BigDecimal descuentoPct;
 
+    @Column(length = 50)
+    private String tag;
+
     @JsonIgnore
     @OneToMany(mappedBy = "producto")
     private List<VarianteProducto> variantes;

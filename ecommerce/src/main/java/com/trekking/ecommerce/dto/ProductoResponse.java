@@ -18,4 +18,5 @@ public class ProductoResponse {
     EstadoProducto estado;
     BigDecimal precioBase;
     BigDecimal descuentoPct;
+    String tag;
 }

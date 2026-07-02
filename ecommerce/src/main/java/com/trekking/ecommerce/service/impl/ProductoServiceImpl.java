@@ -26,27 +26,27 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findAll() {
-        return productoRepository.findByEstado(EstadoProducto.ACTIVO);
+        return productoRepository.findByEstadoFetch(EstadoProducto.ACTIVO);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByCategoria(Long categoriaId) {
         categoriaService.findById(categoriaId);
-        return productoRepository.findByEstadoAndCategoriaId(EstadoProducto.ACTIVO, categoriaId);
+        return productoRepository.findByEstadoAndCategoriaIdFetch(EstadoProducto.ACTIVO, categoriaId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByMarca(Long marcaId) {
         marcaService.findById(marcaId);
-        return productoRepository.findByEstadoAndMarcaId(EstadoProducto.ACTIVO, marcaId);
+        return productoRepository.findByEstadoAndMarcaIdFetch(EstadoProducto.ACTIVO, marcaId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByEstado(EstadoProducto estado) {
-        return productoRepository.findByEstado(estado);
+        return productoRepository.findByEstadoFetch(estado);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class ProductoServiceImpl implements ProductoService {
                 .estado(request.getEstado())
                 .precioBase(request.getPrecioBase())
                 .descuentoPct(request.getDescuentoPct())
+                .tag(request.getTag())
                 .build();
         return productoRepository.save(producto);
     }
@@ -82,6 +83,7 @@ public class ProductoServiceImpl implements ProductoService {
         actual.setEstado(request.getEstado());
         actual.setPrecioBase(request.getPrecioBase());
         actual.setDescuentoPct(request.getDescuentoPct());
+        actual.setTag(request.getTag());
         return productoRepository.save(actual);
     }
 

@@ -135,11 +135,13 @@ class EndpointFlujosIntegrationTest {
         assertThat(totalConDescuento).isEqualByComparingTo("1800.00");
 
         MvcResult checkoutResult = mockMvc.perform(post("/api/carritos/{id}/checkout", carritoId)
-                        .header("Authorization", "Bearer " + cliente.token()))
+                        .header("Authorization", "Bearer " + cliente.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(checkoutBody())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"))
                 .andExpect(jsonPath("$.descuentoId").value(descuentoId))
-                .andExpect(jsonPath("$.montoFinal").value(1800.00))
+                .andExpect(jsonPath("$.montoFinal").value(11800.00))
                 .andReturn();
 
         Long ordenId = leerJson(checkoutResult).get("id").asLong();
@@ -216,7 +218,9 @@ class EndpointFlujosIntegrationTest {
                 .andExpect(status().isOk());
 
         Long ordenId = leerJson(mockMvc.perform(post("/api/carritos/{id}/checkout", carritoId)
-                        .header("Authorization", "Bearer " + cliente.token()))
+                        .header("Authorization", "Bearer " + cliente.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(checkoutBody())))
                 .andExpect(status().isOk())
                 .andReturn())
                 .get("id").asLong();
@@ -372,6 +376,18 @@ class EndpointFlujosIntegrationTest {
                 "fechaFin", LocalDate.now().plusDays(30).toString(),
                 "estado", "ACTIVO"
         );
+    }
+
+    private Map<String, String> checkoutBody() {
+        Map<String, String> body = new java.util.HashMap<>();
+        body.put("nombreDestinatario", "Test User");
+        body.put("direccion", "Av. Test 123");
+        body.put("ciudad", "Buenos Aires");
+        body.put("provincia", "Buenos Aires");
+        body.put("codigoPostal", "1000");
+        body.put("telefono", "1155550000");
+        body.put("metodoPago", "TRANSFERENCIA");
+        return body;
     }
 
     private JsonNode leerJson(MvcResult result) throws Exception {

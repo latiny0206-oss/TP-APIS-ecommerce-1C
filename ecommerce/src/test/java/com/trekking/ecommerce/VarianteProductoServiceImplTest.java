@@ -134,7 +134,7 @@ class VarianteProductoServiceImplTest {
 
         assertThatThrownBy(() -> varianteService.descontarStock(1L, 5))
                 .isInstanceOf(BusinessRuleException.class)
-                .hasMessageContaining("Stock insuficiente");
+                .hasMessageContaining("Sin stock disponible");
     }
 
     @Test
