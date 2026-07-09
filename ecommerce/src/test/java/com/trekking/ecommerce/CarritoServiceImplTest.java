@@ -50,6 +50,7 @@ class CarritoServiceImplTest {
     @Mock private ItemOrdenRepository itemOrdenRepository;
     @Mock private UsuarioRepository usuarioRepository;
     @Mock private UsuarioService usuarioService;
+    @Mock private com.trekking.ecommerce.service.EmailService emailService;
 
     @InjectMocks
     private CarritoServiceImpl carritoService;
@@ -380,6 +381,80 @@ class CarritoServiceImplTest {
         assertThatThrownBy(() -> carritoService.actualizarItem(carritoId, itemId, 2))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("no pertenece al carrito");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // realizarCompra — envío: el umbral se evalúa sobre el subtotal SIN descuento
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private Orden comprarConSubtotal(BigDecimal precioUnitario, Descuento descuento) {
+        Long carritoId = 13L;
+        Producto producto = Producto.builder()
+                .nombre("Campera")
+                .estado(EstadoProducto.ACTIVO)
+                .build();
+        VarianteProducto variante = VarianteProducto.builder()
+                .id(31L)
+                .producto(producto)
+                .stock(5)
+                .precio(precioUnitario)
+                .build();
+        Usuario usuario = Usuario.builder().id(1L).username("juan").build();
+        Carrito carrito = Carrito.builder()
+                .id(carritoId)
+                .usuario(usuario)
+                .estado(EstadoCarrito.ACTIVO)
+                .descuento(descuento)
+                .montoTotal(precioUnitario)
+                .build();
+        ItemCarrito item = ItemCarrito.builder()
+                .carrito(carrito)
+                .variante(variante)
+                .cantidad(1)
+                .precioUnitario(precioUnitario)
+                .build();
+
+        when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(carrito));
+        when(itemCarritoRepository.findByCarritoId(carritoId)).thenReturn(List.of(item));
+        // Devuelve la orden realmente construida para asertar sobre el monto calculado
+        when(ordenRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(carritoRepository.save(any())).thenReturn(carrito);
+
+        return carritoService.realizarCompra(carritoId, checkoutValido());
+    }
+
+    private Descuento cuponPorcentajeVigente(String valor) {
+        return Descuento.builder()
+                .id(1L)
+                .nombre("Promo")
+                .codigo("PROMO")
+                .tipo(TipoDescuento.PORCENTAJE)
+                .valor(new BigDecimal(valor))
+                .fechaInicio(LocalDate.now().minusDays(1))
+                .fechaFin(LocalDate.now().plusDays(1))
+                .estado(EstadoDescuento.ACTIVO)
+                .build();
+    }
+
+    @Test
+    void realizarCompra_cuponBajaElTotalDelUmbral_mantieneEnvioGratis() {
+        // $85.000 ganó envío gratis (≥ $80.000); cupón 10% → $76.500 y el envío sigue gratis
+        Orden orden = comprarConSubtotal(new BigDecimal("85000.00"), cuponPorcentajeVigente("10"));
+        assertThat(orden.getMontoFinal()).isEqualByComparingTo(new BigDecimal("76500.00"));
+    }
+
+    @Test
+    void realizarCompra_subtotalBajoElUmbral_cobraEnvio() {
+        // $60.000 sin cupón → no califica → total $70.000 con envío
+        Orden orden = comprarConSubtotal(new BigDecimal("60000.00"), null);
+        assertThat(orden.getMontoFinal()).isEqualByComparingTo(new BigDecimal("70000.00"));
+    }
+
+    @Test
+    void realizarCompra_subtotalJustoEnElUmbral_envioGratis() {
+        // $80.000 exactos → califica → total $80.000 sin envío
+        Orden orden = comprarConSubtotal(new BigDecimal("80000.00"), null);
+        assertThat(orden.getMontoFinal()).isEqualByComparingTo(new BigDecimal("80000.00"));
     }
 
     private CheckoutRequest checkoutValido() {

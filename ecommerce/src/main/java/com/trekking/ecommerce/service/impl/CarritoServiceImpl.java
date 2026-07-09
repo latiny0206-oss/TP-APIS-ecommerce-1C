@@ -295,8 +295,12 @@ public class CarritoServiceImpl implements CarritoService {
 
         // subtotal after discount
         BigDecimal subtotalConDesc = calcularTotal(idCarrito);
-        // Shipping: free above threshold
-        BigDecimal costoEnvio = subtotalConDesc.compareTo(SHIPPING_THRESHOLD) >= 0
+        // El umbral de envío gratis se evalúa sobre el subtotal SIN descuento:
+        // un cupón no puede quitar el envío gratis ya ganado por monto de compra
+        BigDecimal subtotalSinDesc = items.stream()
+                .map(item -> item.getPrecioUnitario().multiply(BigDecimal.valueOf(item.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal costoEnvio = subtotalSinDesc.compareTo(SHIPPING_THRESHOLD) >= 0
                 ? BigDecimal.ZERO
                 : SHIPPING_COST;
         BigDecimal totalConEnvio = subtotalConDesc.add(costoEnvio).setScale(2, RoundingMode.HALF_UP);
