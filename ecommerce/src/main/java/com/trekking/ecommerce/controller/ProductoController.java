@@ -7,6 +7,7 @@ import com.trekking.ecommerce.model.Producto;
 import com.trekking.ecommerce.model.enums.EstadoProducto;
 import com.trekking.ecommerce.service.ProductoService;
 import jakarta.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,17 @@ public class ProductoController {
     public ResponseEntity<List<ProductoResponse>> findByEstado(@PathVariable EstadoProducto estado) {
         return ResponseEntity.ok(productoService.findByEstado(estado).stream()
                 .map(this::toResponse).toList());
+    }
+
+    // Todos los estados en un solo llamado, para las vistas admin (evita 3 GETs por /estado/{estado})
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProductoResponse>> findAllForAdmin() {
+        List<ProductoResponse> result = Arrays.stream(EstadoProducto.values())
+                .flatMap(estado -> productoService.findByEstado(estado).stream())
+                .map(this::toResponse)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
