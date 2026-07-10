@@ -82,12 +82,14 @@ CREATE TABLE usuario (
 CREATE TABLE descuento (
     id_descuento BIGINT         NOT NULL AUTO_INCREMENT,
     nombre       VARCHAR(100)   NOT NULL,
+    codigo       VARCHAR(50)    NULL,
     tipo         VARCHAR(20)    NOT NULL,   -- PORCENTAJE | FIJO
     valor        DECIMAL(10, 2) NOT NULL,
     fecha_ini    DATE           NOT NULL,
     fecha_fin    DATE           NOT NULL,
     estado       VARCHAR(20)    NOT NULL,   -- ACTIVO | EXPIRADO
-    PRIMARY KEY (id_descuento)
+    PRIMARY KEY (id_descuento),
+    UNIQUE KEY uk_descuento_codigo (codigo)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -121,6 +123,7 @@ CREATE TABLE variante_producto (
     stock       INT            NOT NULL,
     precio      DECIMAL(10, 2) NOT NULL,
     estacion    VARCHAR(20)    NOT NULL,   -- PRIMAVERA | VERANO | OTONO | INVIERNO
+    version     BIGINT         NOT NULL DEFAULT 0,
     PRIMARY KEY (id_variante),
     UNIQUE KEY uk_variante_prod_color_talla (id_producto, color, talla),
     CONSTRAINT fk_variante_producto
@@ -241,10 +244,10 @@ INSERT INTO usuario (id_usuario, username, email, password, nombre, apellido, ro
     (4, 'inactivo',   'inactivo@trekking.com',   '$2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Usuario','Inactivo', 'CLIENTE', 'INACTIVO');
 
 -- ---------- 5.4 Descuentos ----------
-INSERT INTO descuento (id_descuento, nombre, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
-    (1, 'Promo Otono 2026',     'PORCENTAJE', 15.00, '2026-04-01', '2027-12-30', 'ACTIVO'),
-    (2, 'Descuento Fijo 5000',  'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
-    (3, 'Black Friday 2025',    'PORCENTAJE', 30.00, '2025-11-20', '2025-11-30', 'EXPIRADO');
+INSERT INTO descuento (id_descuento, nombre, codigo, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
+    (1, 'Promo Otono 2026',    'OTONO2026',       'PORCENTAJE', 15.00,   '2026-04-01', '2027-12-30', 'ACTIVO'),
+    (2, 'Descuento Fijo 5000', 'FIJO5000',        'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
+    (3, 'Black Friday 2025',   'BLACKFRIDAY2025', 'PORCENTAJE', 30.00,   '2025-11-20', '2027-12-31', 'ACTIVO');
 
 -- ---------- 5.5 Productos ----------
 INSERT INTO producto (id_producto, id_marca, id_categoria, nombre, descripcion, estado, precio_base) VALUES

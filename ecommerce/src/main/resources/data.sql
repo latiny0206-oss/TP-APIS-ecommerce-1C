@@ -21,9 +21,9 @@ INSERT IGNORE INTO usuario (id_usuario, username, email, password, nombre, apell
     (4, 'inactivo',   'inactivo@trekking.com', '$2a$10$fa0WiM9OfvwpXFhTZyhxkeHcFWC/1l2SRikXLlke.J82nDykPS7AW', 'Usuario', 'Inactivo', 'CLIENTE', 'INACTIVO');
 
 INSERT IGNORE INTO descuento (id_descuento, nombre, codigo, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
-    (1, 'Promo Otono 2026',    'OTONO2026', 'PORCENTAJE', 15.00,   '2026-04-01', '2026-12-31', 'ACTIVO'),
+    (1, 'Promo Otono 2026',    'OTONO2026', 'PORCENTAJE', 15.00,   '2026-04-01', '2027-12-30', 'ACTIVO'),
     (2, 'Descuento Fijo 5000', 'FIJO5000',  'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
-    (3, 'Black Friday 2025',   NULL,        'PORCENTAJE', 30.00,   '2025-11-20', '2025-11-30', 'EXPIRADO');
+    (3, 'Black Friday 2025',   'BLACKFRIDAY2025', 'PORCENTAJE', 30.00,   '2025-11-20', '2027-12-31', 'ACTIVO');
 
 INSERT IGNORE INTO producto (id_producto, id_marca, id_categoria, nombre, descripcion, estado, precio_base) VALUES
     (1, 2, 1, 'Bota Trekking Vectiv',  'Bota de caña media, impermeable, suela Vibram.',        'ACTIVO',  85000.00),
