@@ -9,6 +9,7 @@ import lombok.Value;
 public class ItemCarritoResponse {
     Long id;
     Long varianteId;
+    Long productoId;
     String varianteColor;
     String varianteTalla;
     String productoNombre;

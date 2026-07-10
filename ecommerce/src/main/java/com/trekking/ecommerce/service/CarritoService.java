@@ -2,6 +2,7 @@ package com.trekking.ecommerce.service;
 
 import com.trekking.ecommerce.dto.CarritoRequest;
 import com.trekking.ecommerce.dto.CheckoutRequest;
+import com.trekking.ecommerce.dto.ItemCarritoRequest;
 import com.trekking.ecommerce.model.Carrito;
 import com.trekking.ecommerce.model.ItemCarrito;
 import com.trekking.ecommerce.model.Orden;
@@ -18,6 +19,7 @@ public interface CarritoService {
     Carrito update(Long id, CarritoRequest request);
     void delete(Long id);
     ItemCarrito agregarItem(Long idCarrito, Long idVariante, Integer cantidad);
+    Carrito reemplazarItems(Long idCarrito, List<ItemCarritoRequest> items);
     void eliminarItem(Long idCarrito, Long idItemCarrito);
     ItemCarrito actualizarItem(Long idCarrito, Long idItemCarrito, Integer cantidad);
     BigDecimal calcularTotal(Long idCarrito);

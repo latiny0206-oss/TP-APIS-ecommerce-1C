@@ -1,6 +1,7 @@
 package com.trekking.ecommerce;
 
 import com.trekking.ecommerce.dto.CheckoutRequest;
+import com.trekking.ecommerce.dto.ItemCarritoRequest;
 import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.model.Carrito;
 import com.trekking.ecommerce.model.Descuento;
@@ -36,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -360,6 +362,47 @@ class CarritoServiceImplTest {
 
         // cantidad original 1 + 3 agregados = 4
         assertThat(itemExistente.getCantidad()).isEqualTo(4);
+    }
+
+    @Test
+    void reemplazarItems_vaciaYAgregaLosNuevos() {
+        Long carritoId = 60L;
+        Long varianteId = 70L;
+
+        Producto producto = Producto.builder().nombre("Campera").estado(EstadoProducto.ACTIVO).build();
+        VarianteProducto variante = VarianteProducto.builder()
+                .id(varianteId).producto(producto).stock(10).precio(new BigDecimal("100.00")).build();
+        Carrito carrito = Carrito.builder()
+                .id(carritoId).estado(EstadoCarrito.ACTIVO).descuento(null).build();
+
+        when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(carrito));
+        when(itemCarritoRepository.findByCarritoId(carritoId)).thenReturn(List.of());
+        when(varianteProductoService.findById(varianteId)).thenReturn(variante);
+        when(itemCarritoRepository.findByCarritoIdAndVarianteId(carritoId, varianteId))
+                .thenReturn(Optional.empty());
+        when(itemCarritoRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(carritoRepository.save(any())).thenReturn(carrito);
+
+        ItemCarritoRequest req = new ItemCarritoRequest();
+        req.setIdVariante(varianteId);
+        req.setCantidad(2);
+
+        carritoService.reemplazarItems(carritoId, List.of(req));
+
+        // vació los items previos y guardó el nuevo item
+        verify(itemCarritoRepository).deleteAll(any());
+        verify(itemCarritoRepository, atLeastOnce()).save(any(ItemCarrito.class));
+    }
+
+    @Test
+    void reemplazarItems_carritoConvertido_lanzaBusinessRuleException() {
+        Long carritoId = 61L;
+        Carrito carrito = Carrito.builder()
+                .id(carritoId).estado(EstadoCarrito.CONVERTIDO).build();
+        when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(carrito));
+
+        assertThatThrownBy(() -> carritoService.reemplazarItems(carritoId, List.of()))
+                .isInstanceOf(BusinessRuleException.class);
     }
 
     @Test

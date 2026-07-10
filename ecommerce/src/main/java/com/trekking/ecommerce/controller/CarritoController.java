@@ -105,6 +105,17 @@ public class CarritoController extends AuthenticatedController {
                 .map(this::toItemResponse).toList());
     }
 
+    // Reemplaza TODOS los items del carrito en una sola operación atómica.
+    // Lo usa el front para volcar el snapshot del carrito local (al cambiar de
+    // pestaña, cerrarla o cerrar sesión) sin hacer vaciar + N inserciones.
+    @PutMapping("/{id}/items")
+    public ResponseEntity<CarritoResponse> reemplazarItems(
+            @PathVariable Long id,
+            @RequestBody @Valid List<ItemCarritoRequest> items) {
+        validarPropietario(carritoService.findById(id).getUsuario().getId());
+        return ResponseEntity.ok(toResponse(carritoService.reemplazarItems(id, items)));
+    }
+
     @GetMapping("/{id}/total")
     public ResponseEntity<BigDecimal> calcularTotal(@PathVariable Long id) {
         validarPropietario(carritoService.findById(id).getUsuario().getId());
@@ -158,6 +169,7 @@ public class CarritoController extends AuthenticatedController {
         return ItemCarritoResponse.builder()
                 .id(item.getId())
                 .varianteId(item.getVariante().getId())
+                .productoId(item.getVariante().getProducto().getId())
                 .varianteColor(item.getVariante().getColor())
                 .varianteTalla(item.getVariante().getTalla())
                 .productoNombre(item.getVariante().getProducto().getNombre())

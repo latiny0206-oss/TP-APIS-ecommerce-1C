@@ -2,6 +2,7 @@ package com.trekking.ecommerce.service.impl;
 
 import com.trekking.ecommerce.dto.CarritoRequest;
 import com.trekking.ecommerce.dto.CheckoutRequest;
+import com.trekking.ecommerce.dto.ItemCarritoRequest;
 import com.trekking.ecommerce.exception.BusinessRuleException;
 import com.trekking.ecommerce.exception.ResourceNotFoundException;
 import com.trekking.ecommerce.model.Carrito;
@@ -153,6 +154,22 @@ public class CarritoServiceImpl implements CarritoService {
         carrito.setMontoTotal(calcularTotal(idCarrito));
         carritoRepository.save(carrito);
         return saved;
+    }
+
+    @Override
+    @Transactional
+    public Carrito reemplazarItems(Long idCarrito, List<ItemCarritoRequest> items) {
+        Carrito carrito = findById(idCarrito);
+        if (carrito.getEstado() == EstadoCarrito.CONVERTIDO || carrito.getEstado() == EstadoCarrito.ABANDONADO) {
+            throw new BusinessRuleException("No se pueden reemplazar items de un carrito en estado " + carrito.getEstado());
+        }
+        vaciarCarrito(idCarrito);
+        if (items != null) {
+            for (ItemCarritoRequest item : items) {
+                agregarItem(idCarrito, item.getIdVariante(), item.getCantidad());
+            }
+        }
+        return findById(idCarrito);
     }
 
     @Override
