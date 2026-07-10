@@ -242,7 +242,7 @@ INSERT INTO usuario (id_usuario, username, email, password, nombre, apellido, ro
 
 -- ---------- 5.4 Descuentos ----------
 INSERT INTO descuento (id_descuento, nombre, tipo, valor, fecha_ini, fecha_fin, estado) VALUES
-    (1, 'Promo Otono 2026',     'PORCENTAJE', 15.00, '2026-04-01', '2026-06-30', 'ACTIVO'),
+    (1, 'Promo Otono 2026',     'PORCENTAJE', 15.00, '2026-04-01', '2027-12-30', 'ACTIVO'),
     (2, 'Descuento Fijo 5000',  'FIJO',       5000.00, '2026-04-01', '2026-12-31', 'ACTIVO'),
     (3, 'Black Friday 2025',    'PORCENTAJE', 30.00, '2025-11-20', '2025-11-30', 'EXPIRADO');
 
